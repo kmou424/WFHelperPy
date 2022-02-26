@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>WFHelperPy - Manager</title>
+    <link rel="stylesheet" href="../static/css/mdui.css" />
+    <link rel="stylesheet" href="../static/css/main.css" />
+    <script src="../static/js/jquery-3.6.0.min.js"></script>
+    <script src="../static/js/mdui.js"></script>
+  </head>
+  <body class="mdui-theme-primary-pink mdui-theme-accent-pink">
+    <div class="mdui-container toolbar-margin">
+      <div class="mdui-card corner-8px">
+        <div class="mdui-toolbar mdui-color-white">
+          <a href="javascript:;" class="mdui-btn mdui-btn-icon">
+            <i class="mdui-icon material-icons">menu</i>
+          </a>
+          <span class="mdui-typo-title">管理</span>
+          <div class="mdui-toolbar-spacer"></div>
+          <a id="toolbar_run_btn" class="mdui-btn mdui-btn-icon">
+            <i class="mdui-icon material-icons">play_arrow</i>
+          </a>
+          <a id="toolbar_save_btn" class="mdui-btn mdui-btn-icon">
+            <i class="mdui-icon material-icons">save</i>
+          </a>
+          <a
+            onclick="KRequest.updatePage('/', null);"
+            class="mdui-btn mdui-btn-icon"
+          >
+            <i class="mdui-icon material-icons">refresh</i>
+          </a>
+        </div>
+        <div class="mdui-tab mdui-tab-centered" id="tab" mdui-tab>
+          <a href="#tab-home" class="mdui-ripple mdui-tab-active">
+            <i class="mdui-icon material-icons">home</i>
+            <label>首页</label>
+          </a>
+          <a href="#tab-custom" class="mdui-ripple mdui-tab-active">
+            <i class="mdui-icon material-icons">build</i>
+            <label>自定义</label>
+          </a>
+          <a href="#tab-log" id="tab_log" class="mdui-ripple mdui-tab-active">
+            <i class="mdui-icon material-icons">assignment</i>
+            <label>日志(测试)</label>
+          </a>
+          <a href="#tab-settings" class="mdui-ripple">
+            <i class="mdui-icon material-icons">settings</i>
+            <label>设置</label>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div id="all-settings-container" class="mdui-container">
+      <div id="tab-home">
+        <div id="features-switches" class="mdui-card content-card corner-8px">
+          <div class="mdui-card-primary">
+            <div class="mdui-card-primary-title">主要功能</div>
+            <div class="mdui-card-primary-subtitle">执行优先级默认从上至下</div>
+          </div>
+          <div class="mdui-card-content switch-preference mdui-ripple">
+            <a>铃铛车</a>
+            <label class="mdui-switch">
+              <input id="track_bell_switch" type="checkbox" />
+              <i class="mdui-switch-icon"></i>
+            </label>
+          </div>
+          <div class="mdui-card-content switch-preference mdui-ripple">
+            <a>关注/互关车</a>
+            <label class="mdui-switch">
+              <input id="track_boss_list_switch" type="checkbox" />
+              <i class="mdui-switch-icon"></i>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div id="tab-custom">
+        <div id="bell_options" class="mdui-card content-card corner-8px">
+          <div class="mdui-card-primary">
+            <div class="mdui-card-primary-title">铃铛 - 扩展</div>
+            <div class="mdui-card-primary-subtitle">嗯？铃铛响了</div>
+          </div>
+          <div
+            id="bell_selector_mode"
+            class="mdui-card-content mdui-ripple radio-chip-preference"
+          >
+            <label>铃铛进房模式</label>
+            <div class="radio-group">
+              <div
+                class="radio-chip mdui-chip mdui-color-grey-300 mdui-shadow-0"
+                value="no"
+                ischecked="true"
+              >
+                <span class="mdui-chip-icon mdui-color-grey-400">
+                  <i class="mdui-icon material-icons">radio_button_unchecked</i>
+                </span>
+                <span class="mdui-chip-title">全部参加</span>
+              </div>
+              <div
+                class="radio-chip mdui-chip mdui-color-grey-300 mdui-shadow-0"
+                value="boss_selector"
+                ischecked="false"
+              >
+                <span class="mdui-chip-icon mdui-color-grey-400">
+                  <i class="mdui-icon material-icons">radio_button_unchecked</i>
+                </span>
+                <span class="mdui-chip-title">由"Boss 筛选器"决定</span>
+              </div>
+              <div
+                class="radio-chip mdui-chip mdui-color-grey-300 mdui-shadow-0"
+                value="bell_boss_selector_advanced"
+                ischecked="false"
+              >
+                <span class="mdui-chip-icon mdui-color-grey-400">
+                  <i class="mdui-icon material-icons">radio_button_unchecked</i>
+                </span>
+                <span class="mdui-chip-title">自定义筛选器(高级)</span>
+              </div>
+            </div>
+          </div>
+          <div class="mdui-card-content mdui-ripple"></div>
+        </div>
+        <div class="mdui-card content-card corner-8px">
+          <div class="mdui-card-primary">
+            <div class="mdui-card-primary-title">Boss 筛选器</div>
+            <div class="mdui-card-primary-subtitle">今天想打哪些Boss呢？</div>
+          </div>
+          <div
+            id="boss_selector"
+            class="mdui-card-content mdui-collapse"
+            mdui-collapse
+          ></div>
+        </div>
+      </div>
+      <div id="tab-log"></div>
+      <div id="tab-settings">
+        <div id="settings-device" class="mdui-card content-card corner-8px">
+          <div class="mdui-card-primary">
+            <div class="mdui-card-primary-title">连接设置</div>
+            <div class="mdui-card-primary-subtitle">关于连接设备的基本设置</div>
+          </div>
+          <div class="mdui-card-content mdui-textfield mdui-ripple">
+            <label class="mdui-textfield-label" for="device_adb_serial">
+              设备ADB Serial
+            </label>
+            <input
+              id="device_adb_serial"
+              class="mdui-textfield-input"
+              type="text"
+            />
+          </div>
+          <div
+            id="server_selector"
+            class="mdui-card-content mdui-ripple radio-chip-preference"
+          >
+            <label>选择区服</label>
+            <div class="radio-group">
+              <div
+                class="radio-chip mdui-chip mdui-color-grey-300 mdui-shadow-0"
+                value="cn"
+                ischecked="true"
+              >
+                <span class="mdui-chip-icon mdui-color-grey-400">
+                  <i class="mdui-icon material-icons">radio_button_unchecked</i>
+                </span>
+                <span class="mdui-chip-title">国服</span>
+              </div>
+              <div
+                class="radio-chip mdui-chip mdui-color-grey-300 mdui-shadow-0"
+                value="tw"
+                ischecked="false"
+              >
+                <span class="mdui-chip-icon mdui-color-grey-400">
+                  <i class="mdui-icon material-icons">radio_button_unchecked</i>
+                </span>
+                <span class="mdui-chip-title">台服</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="settings-debug" class="mdui-card content-card corner-8px">
+          <div class="mdui-card-primary">
+            <div class="mdui-card-primary-title">实验性</div>
+            <div class="mdui-card-primary-subtitle">
+              一些测试中或不稳定的功能(甚至有可能还没开工)
+            </div>
+          </div>
+          <div class="mdui-card-content switch-preference mdui-ripple">
+            <a>开启日志功能</a>
+            <label class="mdui-switch">
+              <input id="enable_tab_log_switch" type="checkbox" />
+              <i class="mdui-switch-icon"></i>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 对话框 -->
+    <div>
+      <div id="bell_boss_selector_advanced" class="mdui-dialog">
+        <div class="mdui-dialog-content">
+          <div class="mdui-textfield">
+            <label class="mdui-textfield-label">编辑高级筛选器</label>
+            <textarea
+              id="bell_boss_selector_advanced_edittext"
+              class="mdui-textfield-input"
+            ></textarea>
+          </div>
+          <p class="helper-font">
+            每条规则应按照 (Boss ID)_(Boss等级别名) 的格式来填写
+            <br />
+            并且每两条规则之间应当用","来分隔
+            <br />
+            如 viesolas_prim,ruingoremu_mid,ruingoremu_super
+            <br />
+            <a class="mdui-text-color-red"
+              >若您对高级筛选器的规则编写仍抱有疑问,
+              请尝试从下方表格内获取帮助信息或者使用默认"Boss 筛选器"</a
+            >
+          </p>
+          <div class="mdui-table-fluid">
+            <div class="table-title">Boss 等级和别名对照表</div>
+            <table class="mdui-table mdui-table-hoverable">
+              <thead>
+                <tr>
+                  <th>等级</th>
+                  <th>别名</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>初级</th>
+                  <td>prim</td>
+                </tr>
+                <tr>
+                  <th>中级</th>
+                  <td>mid</td>
+                </tr>
+                <tr>
+                  <th>高级</th>
+                  <td>high</td>
+                </tr>
+                <tr>
+                  <th>高级+</th>
+                  <td>highp</td>
+                </tr>
+                <tr>
+                  <th>超级</th>
+                  <td>super</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <br />
+          <div class="mdui-table-fluid">
+            <div class="table-title">Boss 名称和ID对照表</div>
+            <table class="mdui-table mdui-table-hoverable">
+              <thead>
+                <tr>
+                  <th>Boss 名称</th>
+                  <th>Boss ID</th>
+                </tr>
+              </thead>
+              <tbody
+                id="bell_boss_selector_advanced_boss_name_id_table"
+              ></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="mdui-dialog-actions">
+          <button
+            onclick="DialogManager.showBellSelectorAdvanced(false)"
+            class="mdui-btn mdui-ripple"
+          >
+            取消
+          </button>
+          <button
+            onclick="DialogManager.showBellSelectorAdvanced(true)"
+            class="mdui-btn mdui-ripple"
+          >
+            确定
+          </button>
+        </div>
+      </div>
+    </div>
+    <script src="../static/js/main.js"></script>
+  </body>
+</html>

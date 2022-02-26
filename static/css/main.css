@@ -1,0 +1,95 @@
+body::-webkit-scrollbar {
+  width: 0 !important;
+  -ms-overflow-style: none;
+  overflow: -moz-scrollbars-none;
+}
+
+body {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.toolbar-margin {
+  margin-bottom: 20px;
+}
+
+.switch-preference {
+  display: flex;
+  align-items: center;
+}
+
+.content-card:not(:last-child) {
+  margin-bottom: 10px;
+}
+
+.corner-8px {
+  border-radius: 8px;
+}
+
+.switch-preference > a {
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.switch-preference > label {
+  margin-left: auto;
+  pointer-events: none;
+}
+
+.radio-chip-preference {
+  display: flex;
+  align-items: center;
+}
+
+.radio-chip-preference > label {
+  color: rgba(0, 0, 0, 0.54);
+  font-size: 14px;
+  margin-right: 12px;
+}
+
+.outline-collapse-card {
+  position: relative;
+  overflow: hidden;
+  color: #000;
+  background-color: #fff;
+  border: 2px solid #ececec;
+  border-radius: 4px;
+}
+
+.outline-collapse-card:not(:last-child) {
+  margin-bottom: 10px;
+}
+
+.outline-collapse-card-header {
+  display: flex;
+  align-items: center;
+  padding: 8px 14px 8px 14px;
+}
+
+.outline-collapse-card-header > .outline-collapse-card-header-arrow {
+  margin-left: auto;
+}
+
+.outline-collapse-card-body {
+  margin: 8px;
+}
+
+.outline-collapse-card > .mdui-collapse-item-body > a {
+  float: right;
+  margin-right: 14px;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.helper-font {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.table-title {
+  text-align: center;
+  color: rgba(0, 0, 0, 0.54);
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 48px;
+}
