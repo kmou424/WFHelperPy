@@ -8,18 +8,14 @@ class Login:
     def track(mArgs: Args, task: Task):
         # 前往登录: 点一下屏幕来登录
         if task == Task.GO_LOGIN:
-            mArgs.adb.random_click(CheckTemplate.LOGIN_INTERFACE_SIGN.getRect(mArgs.mGameServer))
-            return Task.GO_CONTINUE_AFTER_LOGIN
+            if Checker.checkImageWithTemplate(mArgs, CheckTemplate.LOGIN_INTERFACE_SIGN):
+                mArgs.adb.random_click(CheckTemplate.LOGIN_INTERFACE_SIGN.getRect(mArgs.mGameServer))
+                return Task.GO_CONTINUE_AFTER_LOGIN
         # 点击登录后
         if task == Task.GO_CONTINUE_AFTER_LOGIN:
             # 如果现在还在登录界面，爬回去重新点
             if Checker.checkImageWithTemplate(mArgs, CheckTemplate.LOGIN_INTERFACE_SIGN):
                 return Task.GO_LOGIN
-            # 如果登录后直接进入了主界面
-            if Checker.checkBottomBar(mArgs.mScreenshot,
-                                      CheckColor.BOTTOM_BAR_ACTIVE_COLOR,
-                                      CheckPoint.BOTTOM_BAR_HOME_POINT):
-                return Task.GO_BACK_TO_HOME
             # 如果登录后遇到了继续进行之前任务的弹窗
             # TODO: 用户选择重新登录后是否继续之前的任务
             if Checker.checkImageWithTemplate(mArgs, CheckTemplate.DIALOG_CONTINUE_TASK):

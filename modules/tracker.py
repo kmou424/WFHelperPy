@@ -61,6 +61,8 @@ class TrackerThread(threading.Thread):
             if self.mArgs.adb.zoom > 1.0:
                 self.mArgs.mScreenshot = cv2.resize(self.mArgs.mScreenshot, (720, 1280), interpolation=cv2.INTER_NEAREST)
             print(self.mTask.name)
+            # 意外主城检测
+            self.__check_is_home()
             # 意外弹窗检测
             self.__unexpected_dialog()
             # 意外回到登录界面检测
@@ -81,6 +83,13 @@ class TrackerThread(threading.Thread):
             time.sleep(1)
         # 意外退出处理
         self.mTask = Task.NO_TASK
+
+    def __check_is_home(self):
+        # 如果意外到了主城
+        if Checker.checkBottomBar(self.mArgs.mScreenshot,
+                                  CheckColor.BOTTOM_BAR_ACTIVE_COLOR,
+                                  CheckPoint.BOTTOM_BAR_HOME_POINT):
+            self.mTask = Task.NO_TASK
 
     def __unexpected_dialog(self):
         if Checker.checkImageWithTemplate(self.mArgs, CheckTemplate.DIALOG_CONTINUE_TASK):
