@@ -92,6 +92,11 @@ class TrackerThread(threading.Thread):
             self.mTask = Task.NO_TASK
 
     def __unexpected_dialog(self):
+        # 检测日期改变对话框
+        if Checker.checkImageWithTemplate(self.mArgs, CheckTemplate.DIALOG_DATE_CHANGED):
+            self.mArgs.adb.random_click(CheckTemplate.DIALOG_SINGLE_OK.getRect(self.mArgs.mGameServer))
+            self.mTask = Task.GO_LOGIN
+        # 检测继续任务对话框
         if Checker.checkImageWithTemplate(self.mArgs, CheckTemplate.DIALOG_CONTINUE_TASK):
             self.mTask = Task.GO_CONTINUE_AFTER_LOGIN
         if Checker.checkImageWithTemplate(self.mArgs, CheckTemplate.DIALOG_SINGLE_OK):

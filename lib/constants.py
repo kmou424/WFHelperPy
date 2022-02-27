@@ -112,6 +112,14 @@ class CheckTemplate:
             'tw': Rect(Point(130, 476), Point(583, 676))
         }
     )
+    # 日期改变弹窗
+    DIALOG_DATE_CHANGED = Template(
+        'Dialog_date_changed',
+        {
+            'cn': Rect(Point(298, 535), Point(421, 614)),
+            'tw': Rect(Point(238, 535), Point(475, 614))
+        }
+    )
     # 登录界面
     LOGIN_INTERFACE_SIGN = Template(
         'Login_interface_sign',
