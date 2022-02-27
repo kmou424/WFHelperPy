@@ -83,6 +83,9 @@ class TrackerThread(threading.Thread):
         self.mTask = Task.NO_TASK
 
     def __unexpected_dialog(self):
+        if Checker.checkImageWithTemplate(self.mArgs, CheckTemplate.DIALOG_CONTINUE_TASK):
+            self.mArgs.adb.random_click(CheckTemplate.DIALOG_DOUBLE_OK.getRect(self.mArgs.mGameServer))
+            self.mTask = Task.GO_CHECK_INTERFACE
         if Checker.checkImageWithTemplate(self.mArgs, CheckTemplate.DIALOG_SINGLE_OK):
             print("检测到了意外的弹窗，回到首页")
             self.mArgs.adb.random_click(CheckTemplate.DIALOG_SINGLE_OK.getRect(self.mArgs.mGameServer))
@@ -100,13 +103,11 @@ class TrackerThread(threading.Thread):
         if not Checker.checkBottomBar(self.mArgs.mScreenshot,
                                       CheckColor.BOTTOM_BAR_ACTIVE_COLOR,
                                       CheckPoint.BOTTOM_BAR_HOME_POINT):
-            if not Checker.checkBottomBar(self.mArgs.mScreenshot,
-                                          CheckColor.BOTTOM_BAR_INACTIVE_COLOR,
-                                          CheckPoint.BOTTOM_BAR_HOME_POINT):
-                self.mTask = Task.GO_BACK_TO_HOME
-                return
-            self.mArgs.adb.random_click(CheckRect.BOTTOM_BAR_HOME_RECT)
-        self.mTask = Task.NO_TASK
+            if Checker.checkBottomBar(self.mArgs.mScreenshot,
+                                      CheckColor.BOTTOM_BAR_INACTIVE_COLOR,
+                                      CheckPoint.BOTTOM_BAR_HOME_POINT):
+                self.mArgs.adb.random_click(CheckRect.BOTTOM_BAR_HOME_RECT)
+                self.mTask = Task.NO_TASK
 
 
 class Tracker:
