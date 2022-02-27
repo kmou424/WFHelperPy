@@ -84,8 +84,7 @@ class TrackerThread(threading.Thread):
 
     def __unexpected_dialog(self):
         if Checker.checkImageWithTemplate(self.mArgs, CheckTemplate.DIALOG_CONTINUE_TASK):
-            self.mArgs.adb.random_click(CheckTemplate.DIALOG_DOUBLE_OK.getRect(self.mArgs.mGameServer))
-            self.mTask = Task.GO_CHECK_INTERFACE
+            self.mTask = Task.GO_CONTINUE_AFTER_LOGIN
         if Checker.checkImageWithTemplate(self.mArgs, CheckTemplate.DIALOG_SINGLE_OK):
             print("检测到了意外的弹窗，回到首页")
             self.mArgs.adb.random_click(CheckTemplate.DIALOG_SINGLE_OK.getRect(self.mArgs.mGameServer))
