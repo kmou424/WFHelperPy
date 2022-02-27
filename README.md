@@ -43,27 +43,27 @@ Features:
 
 #### 1. 环境安装与配置
 
-```shell
+```bash
 # 安装前请准备 python3 python-pip git
-foo@foobar # git clone https://github.com/kmou424/WFHelperPy
-foo@foobar # cd WFHelperPy
-foo@foobar # pip install -r requirements.txt
+foo@foobar ~ git clone https://github.com/kmou424/WFHelperPy
+foo@foobar ~ cd WFHelperPy
+foo@foobar ~ pip install -r requirements.txt
 ```
 
 #### 2. 获取模板图片(必需)
 
-```shell
+```bash
 # 为了方便后续模板更新, 模板仓库放在了gitee
 # 仓库地址: https://gitee.com/kmou424/wfhelperpy_template
-foo@foobar # git clone https://gitee.com/kmou424/wfhelperpy_template template
+foo@foobar ~ git clone https://gitee.com/kmou424/wfhelperpy_template template
 ```
 
 #### 3. 运行并访问控制面板
 
-```shell
-foo@foobar # python wfhelper.py
+```bash
+foo@foobar ~ python wfhelper.py
 # 例如:
-# foo@foobar # python wfhelper.py
+# foo@foobar ~ python wfhelper.py
 # * Serving Flask app "wfhelper" (lazy loading)
 # * Environment: production
 #   WARNING: This is a development server. Do not use it in a production deployment.
@@ -80,17 +80,17 @@ foo@foobar # python wfhelper.py
 
 #### 检查并更新模板图片
 
-```shell
+```bash
 # 检查更新前请确保完成过第一次的获取模板图片
-foo@foobar # python template_updater.py
+foo@foobar ~ python template_updater.py
 ```
 
 - 此方法虽然也可以用来第一次获取所有模板图片, 但是速度会**非常非常慢**, 远远不如Git
 
 #### 更新主程序
 
-```shell
-foo@foobar # git pull
+```bash
+foo@foobar ~ git pull
 ```
 
 
@@ -99,10 +99,10 @@ foo@foobar # git pull
 
 #### 检查模板在当前设备界面上的匹配度
 
-```shell
-foo@foobar # python template_test.py <模板区服> <模板图片名>
+```bash
+foo@foobar ~ python template_test.py <模板区服> <模板图片名>
 # 例如:
-# foo@foobar # python template_test.py cn Login_interface_sign
+# foo@foobar ~ python template_test.py cn Login_interface_sign
 # Screenshot: 0.42681159999999996 Seconds
 # {'result': (383.0, 871.5), 'rectangle': ((342, 835), (342, 908), (424, 835), (424, 908)), 'confidence': 0.9637399911880493}
 # Match image: 0.027701500000000046 Seconds
@@ -110,15 +110,15 @@ foo@foobar # python template_test.py <模板区服> <模板图片名>
 
 #### 为特殊设备/区服自制模板图片
 
-```shell
+```bash
 # 生成普通模板
-foo@foobar # python template_generator.py <模板区服> <模板图片名> <左上角坐标x> <左上角坐标y> <右下角坐标x> <右下角坐标y>
+foo@foobar ~ python template_generator.py <模板区服> <模板图片名> <左上角坐标x> <左上角坐标y> <右下角坐标x> <右下角坐标y>
 # 执行后会自动截取设备画面, 用坐标截取并生成单通道图片模板, 保存至 template/<模板区服>/<模板图片名>.png
 # 对应的坐标可以在lib/constants.py内查找
 
 # 生成Boss头像模板(用于检测Boss)
 # 需要在"领主战"->"某个Boss"->点击对应难度旁边绿色的"i"(info)图标来打开Boss信息对话框才能截取
-foo@foobar # python template_boss_generator.py <模板区服> <Boss头像模板名>
+foo@foobar ~ python template_boss_generator.py <模板区服> <Boss头像模板名>
 # 执行后会自动截取设备画面, 用坐标截取并生成单通道Boss头像模板, 保存至 template/<模板区服>/boss/Boss_<Boss头像模板名>.png
 # Boss头像模板名 = <BossID>_<Boss难度>
 ```
