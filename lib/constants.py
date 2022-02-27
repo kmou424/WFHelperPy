@@ -77,6 +77,8 @@ class CheckRect:
     BOTTOM_BAR_STORE_RECT = Rect(Point(370, 1192), Point(474, 1280))
     BOTTOM_BAR_PICKUP_RECT = Rect(Point(490, 1192), Point(594, 1280))
     BOTTOM_BAR_MENU_RECT = Rect(Point(610, 1192), Point(714, 1280))
+    # 主界面
+    DIALOG_ANNOUNCEMENT_CLOSE_BUTTON_RECT = Rect(Point(216, 1147), Point(503, 1210))
     # 准备界面
     PREPARE_CHECKBOX_BUTTON_RECT = Rect(Point(213, 891), Point(507, 974))
 

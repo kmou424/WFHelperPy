@@ -1,4 +1,4 @@
-from lib.constants import Task, CheckTemplate, CheckColor, CheckPoint
+from lib.constants import Task, CheckTemplate, CheckColor, CheckPoint, CheckRect
 from lib.utils import Args
 from modules.checker import Checker
 
@@ -21,6 +21,9 @@ class Login:
             if Checker.checkImageWithTemplate(mArgs, CheckTemplate.DIALOG_CONTINUE_TASK):
                 mArgs.adb.random_click(CheckTemplate.DIALOG_DOUBLE_OK.getRect(mArgs.mGameServer))
                 return Task.GO_CHECK_INTERFACE
+            # 点击关闭公告位置(日期改变)
+            # 无脑点击来跳过签到/公告/活动提示等
+            mArgs.adb.random_click(CheckRect.DIALOG_ANNOUNCEMENT_CLOSE_BUTTON_RECT)
         # 继续上次任务: 前往检测当前界面是否在战斗中
         if task == Task.GO_CHECK_INTERFACE:
             # 判定正在战斗中
