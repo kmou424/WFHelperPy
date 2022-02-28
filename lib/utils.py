@@ -1,7 +1,7 @@
 import hashlib
 import os
-import time
 import random
+import time
 from pathlib import Path
 from urllib import request
 
@@ -11,6 +11,7 @@ import requests
 from adbutils import adb
 
 from lib.config import ConfigManager
+from lib.timer import Timer
 from lib.times import Time
 
 
@@ -120,28 +121,48 @@ class Boss:
     def __init__(self, item: dict):
         self.item = item
 
-    def isAvailable(self):
+    def isAvailable(self) -> bool:
         end_time = Time.getTimeStampByStandardFormat(self.item['end'])
         now_time = Time.getTimeStampForNow()
         return end_time > now_time
 
-    def getName(self):
+    def getName(self) -> str:
         return self.item['name']
 
-    def getId(self):
+    def getId(self) -> str:
         return self.item['id']
 
-    def getType(self):
+    def getType(self) -> str:
         return self.item['type']
 
-    def getLevels(self):
+    def getLevels(self) -> str:
         return self.item['levels']
+
+    def getMinLevel(self):
+        return self.getLevels().split(' ')[0]
 
 
 class Random:
     @staticmethod
-    def genPoint(rect: Rect):
-        random.seed(int(time.time()))
+    def __getSeed():
+        return int(time.time() * 1000000)
+
+    # 生成随机浮点数
+    @staticmethod
+    def genFloat(left: float, right: float, seed=0):
+        random.seed(Random.__getSeed() + seed)
+        return random.uniform(left, right)
+
+    # 生成随机整数
+    @staticmethod
+    def genInt(left: int, right: int, seed=0):
+        random.seed(Random.__getSeed() + seed)
+        return random.randint(left, right)
+
+    # 根据Rect生成随机点
+    @staticmethod
+    def genPoint(rect: Rect, seed=0):
+        random.seed(Random.__getSeed() + seed)
         return Point(random.uniform(rect.left_top.x, rect.right_bottom.x),
                      random.uniform(rect.left_top.y, rect.right_bottom.y))
 
@@ -190,10 +211,12 @@ class AdbTools:
         self.click(self.zoom, Random.genPoint(mRandomRect))
 
     def swipe(self, start_point: Point, end_point: Point, duration_ms: float):
+        start_point.loadZoom(self.zoom)
+        end_point.loadZoom(self.zoom)
         self.device.swipe(
             start_point.x, start_point.y,
             end_point.x, end_point.y,
-            float(format(duration_ms / 1000.0, "%.2f"))
+            duration_ms / 1000
         )
 
     def takeScreenShot(self, isGray: bool) -> cv2.cv2:
@@ -216,9 +239,44 @@ class AdbTools:
         return s[len(s) - 1]
 
 
+class AircvRect:
+    def __init__(self, found: bool, has_info: bool, rect=None):
+        self.found = found
+        self.has_info = has_info
+        self.rect = rect
+
+
+class _GuestData:
+    def __init__(self, mTrackBell: bool, mTrackBossList: bool):
+        self.TrackBellSwitch = mTrackBell
+        self.TrackBossListSWitch = mTrackBossList
+
+
+class _RoomCreatorData:
+    def __init__(self, mMinBossTemplate: str, mRoomCreatorEnabled: bool, mRoomCreatorRecruitmentMode: str,
+                 mRoomCreatorGhostMode: str, mRoomCreatorGhostEscapeTime: int):
+        self.MinBossTemplate = mMinBossTemplate
+        self.Enabled = mRoomCreatorEnabled
+        self.RecruitmentMode = mRoomCreatorRecruitmentMode
+        self.GhostMode = mRoomCreatorGhostMode
+        self.GhostEscapeTime = mRoomCreatorGhostEscapeTime
+
+
 class Args:
-    def __init__(self, mAdb: AdbTools, cfgMan: ConfigManager, mGameServer: str, mScreenshot: cv2.cv2):
+    def __init__(self, mAdb: AdbTools, cfgMan: ConfigManager, timer: Timer,
+                 mGameServer: str,
+                 mTrackBell: bool, mTrackBossList: bool,
+                 mMinBossTemplate: str, mRoomCreatorEnabled: bool, mRoomCreatorRecruitmentMode: str,
+                 mRoomCreatorGhostMode: str, mRoomCreatorGhostEscapeTime: int,
+                 mScreenshot: cv2.cv2):
         self.adb = mAdb
         self.cfgMan = cfgMan
-        self.mGameServer = mGameServer
-        self.mScreenshot = mScreenshot
+        self.timer = timer
+
+        self.GameServer = mGameServer
+        self.GuestData = _GuestData(mTrackBell, mTrackBossList)
+        self.RoomCreatorData = _RoomCreatorData(
+            mMinBossTemplate, mRoomCreatorEnabled, mRoomCreatorRecruitmentMode, mRoomCreatorGhostMode, mRoomCreatorGhostEscapeTime
+        )
+
+        self.Screenshot = mScreenshot

@@ -36,15 +36,24 @@ body {
   pointer-events: none;
 }
 
-.radio-chip-preference {
-  display: flex;
+.summary-widget-preference {
+  display: flexbox -ms-flexbox -webkit-flex;
   align-items: center;
 }
 
-.radio-chip-preference > label {
+.summary-widget-preference > label {
   color: rgba(0, 0, 0, 0.54);
   font-size: 14px;
   margin-right: 12px;
+}
+
+.summary-widget-preference > div {
+  margin-left: 8px;
+  margin-top: 4px;
+}
+
+.summary-widget-preference > div:not(:last-child) {
+  margin-bottom: 4px;
 }
 
 .outline-collapse-card {

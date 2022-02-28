@@ -17,14 +17,30 @@ class ConfigSections:
 
 
 class ConfigOptions:
+    GAMING_MODE_MAIN = _ConfigValue('GamingModeMain')
     TRACK_BELL_SWITCH = _ConfigValue('TrackBellSwitch')
     TRACK_BOSS_LIST_SWITCH = _ConfigValue('TrackBossListSwitch')
+    ROOM_CREATOR_SWITCH = _ConfigValue('RoomCreatorSwitch')
     BELL_SELECTOR_MODE = _ConfigValue('BellSelectorMode')
     BELL_BOSS_SELECTOR_ADVANCED = _ConfigValue('BellBossSelectorAdvanced')
-    BOSS_SELECTOR = _ConfigValue('BossSelector')
+    ROOM_CREATOR_GHOST_MODE = _ConfigValue('RoomCreatorGhostMode')
+    ROOM_CREATOR_GHOST_ESCAPE_TIME = _ConfigValue('RoomCreatorGhostEscapeTime')
+    RECRUITMENT_MODE = _ConfigValue('RecruitmentMode')
+    ROOM_CREATOR_BOSS_SELECTOR = _ConfigValue('RoomCreatorBossSelector')
+    COMMON_BOSS_SELECTOR = _ConfigValue('CommonBossSelector')
     GAME_SERVER = _ConfigValue('GameServer')
     DEVICE_ADB_SERIAL = _ConfigValue('DeviceADBSerial')
     ENABLE_TAB_LOG_SWITCH = _ConfigValue('EnableTabLogSwitch')
+
+
+class ConfigValues:
+    GAMING_MODE_MAIN_GUEST = _ConfigValue('room_guest')
+    GAMING_MODE_MAIN_OWNER = _ConfigValue('room_owner')
+    BELL_SELECTOR_MODE_COMMON = _ConfigValue('common_boss_selector')
+    BELL_SELECTOR_MODE_ADVANCED = _ConfigValue('bell_boss_selector_advanced')
+
+    COMMON_ENABLE = _ConfigValue('enable')
+    COMMON_DISABLE = _ConfigValue('disable')
 
 
 class Actions:
@@ -85,6 +101,43 @@ class CheckRect:
 
 class CheckTemplate:
     # 通用
+    COMMON_CARD_INFO_ICON = Template(
+        'Common_card_info_icon',
+        {
+            'cn': Rect(Point(652, 1063), Point(697, 1105)),
+            'tw': Rect(Point(652, 1063), Point(697, 1105))
+        }
+    )
+    COMMON_CHECKBOX_ACTIVE = Template(
+        'Common_checkbox_active',
+        {
+            'cn': Rect(Point(236, 886), Point(276, 979)),
+            'tw': Rect(Point(236, 886), Point(276, 979)),
+        }
+    )
+    COMMON_CHECKBOX_INACTIVE = Template(
+        'Common_checkbox_inactive',
+        {
+            'cn': Rect(Point(236, 886), Point(276, 979)),
+            'tw': Rect(Point(236, 886), Point(276, 979)),
+        }
+    )
+    COMMON_MULTI_PLAY_BUTTON = Template(
+        'Common_multi_play_button',
+        {
+            # Fact: Rect(Point(343, 840), Point(603, 905))
+            'cn': Rect(Point(45, 772), Point(673, 1075)),
+            'tw': Rect(Point(45, 772), Point(673, 1075))
+        }
+    )
+    COMMON_START_FIGHT_BUTTON = Template(
+        'Common_start_fight_button',
+        {
+            'cn': Rect(Point(213, 890), Point(505, 973)),
+            'tw': Rect(Point(213, 890), Point(505, 973))
+        }
+    )
+    # 对话框
     DIALOG_SINGLE_OK = Template(
         'Dialog_single_ok',
         {
@@ -122,6 +175,38 @@ class CheckTemplate:
             'tw': Rect(Point(238, 535), Point(475, 614))
         }
     )
+    # 领主加成点数
+    DIALOG_INCOME_BUFF = Template(
+        'Dialog_income_buff',
+        {
+            'cn': Rect(Point(236, 502), Point(488, 580)),
+            'tw': Rect(Point(220, 495), Point(498, 575))
+        }
+    )
+    # 招募对话框标题
+    DIALOG_RECRUITMENT_TITLE = Template(
+        'Dialog_recruitment_title',
+        {
+            'cn': Rect(Point(297, 330), Point(424, 365)),
+            'tw': Rect(Point(297, 330), Point(424, 365))
+        }
+    )
+    # 招募对话框确认按钮
+    DIALOG_RECRUITMENT_OK = Template(
+        'Dialog_recruitment_ok',
+        {
+            'cn': Rect(Point(381, 891), Point(663, 954)),
+            'tw': Rect(Point(381, 891), Point(663, 954))
+        }
+    )
+    # 招募对话框取消按钮
+    DIALOG_RECRUITMENT_CANCEL = Template(
+        'Dialog_recruitment_cancel',
+        {
+            'cn': Rect(Point(54, 891), Point(340, 954)),
+            'tw': Rect(Point(54, 891), Point(340, 954))
+        }
+    )
     # 登录界面
     LOGIN_INTERFACE_SIGN = Template(
         'Login_interface_sign',
@@ -137,7 +222,34 @@ class CheckTemplate:
             'cn': Rect(Point(21, 8), Point(74, 60)),
             'tw': Rect(Point(21, 8), Point(74, 60))
         })
-    HOME_BOSS_LIST_BUTTON = Rect(Point(536, 1072), Point(720, 1155))
+    HOME_BOSS_LIST_BUTTON = Template(
+        'Home_boss_list_button',
+        {
+            'cn': Rect(Point(536, 1072), Point(720, 1155)),
+            'tw': Rect(Point(536, 1072), Point(630, 1155))
+        }
+    )
+    BOSS_LIST_LOADING_TEXT = Template(
+        'Boss_list_loading_text',
+        {
+            'cn': Rect(Point(305, 618), Point(458, 658)),
+            'tw': Rect(Point(305, 618), Point(458, 658))
+        }
+    )
+    BOSS_LIST_REFRESH_BUTTON = Template(
+        'Boss_list_refresh_button',
+        {
+            'cn': Rect(Point(632, 285), Point(682, 332)),
+            'tw': Rect(Point(632, 285), Point(682, 332))
+        }
+    )
+    BOSS_INFO_EXCHANGE_BUTTON = Template(
+        'Boss_info_exchange_button',
+        {
+            'cn': Rect(Point(632, 285), Point(682, 332)),
+            'tw': Rect(Point(632, 285), Point(682, 332))
+        }
+    )
     # 铃铛相关
     BELL_DIALOG_TITLE_RECT = Template(
         'Bell_dialog_title',
@@ -167,26 +279,33 @@ class CheckTemplate:
             'tw': Rect(Point(62, 1077), Point(338, 1140))
         }
     )
-    # 准备界面
-    PREPARE_CHECKBOX_ACTIVE = Template(
-        'Prepare_checkbox_active',
+    # 招募
+    RECRUITMENT_BUTTON = Template(
+        'Recruitment_button',
         {
-            'cn': Rect(Point(236, 886), Point(276, 979)),
-            'tw': Rect(Point(236, 886), Point(276, 979)),
+            'cn': Rect(Point(250, 800), Point(467, 861)),
+            'tw': Rect(Point(250, 800), Point(467, 861))
         }
     )
-    PREPARE_CHECKBOX_INACTIVE = Template(
-        'Prepare_checkbox_inactive',
+    RECRUITMENT_DOUBLE_FOLLOW_CHECKBOX = Template(
+        'Recruitment_double_follow_checkbox',
         {
-            'cn': Rect(Point(236, 886), Point(276, 979)),
-            'tw': Rect(Point(236, 886), Point(276, 979)),
+            'cn': Rect(Point(56, 451), Point(665, 555)),
+            'tw': Rect(Point(56, 451), Point(665, 555))
         }
     )
-    PREPARE_BOTTOM_CARD_INFO_BUTTON = Template(
-        'Prepare_bottom_card_info_button',
+    RECRUITMENT_SINGLE_FOLLOW_CHECKBOX = Template(
+        'Recruitment_single_follow_checkbox',
         {
-            'cn': Rect(Point(652, 1063), Point(697, 1105)),
-            'tw': Rect(Point(652, 1063), Point(697, 1105))
+            'cn': Rect(Point(56, 585), Point(665, 682)),
+            'tw': Rect(Point(56, 585), Point(665, 682))
+        }
+    )
+    RECRUITMENT_RANDOM_CHECKBOX = Template(
+        'Recruitment_random_checkbox',
+        {
+            'cn': Rect(Point(56, 705), Point(665, 808)),
+            'tw': Rect(Point(56, 705), Point(665, 808))
         }
     )
     # 战斗界面
@@ -256,6 +375,17 @@ class CheckTemplate:
     )
 
 
+class Const:
+    # Boss列表头图底部坐标Y
+    BOSS_LIST_HEADER_BOTTOM_Y = 372
+    # Boss列表第一张卡片底部坐标Y
+    BOSS_LIST_FIRST_CARD_BOTTOM_Y = 512
+    # Boss列表卡片 左边坐标 X
+    BOSS_LIST_CARD_LEFT_X = 24
+    # Boss列表卡片 右边坐标 X
+    BOSS_LIST_CARD_RIGHT_X = 695
+
+
 class ResultCode:
     START_SUCCEED = 1
     START_FAILED = 2
@@ -286,19 +416,24 @@ class Status:
 class Task:
     NO_TASK = Status(0, "无任务")
     GO_BACK_TO_HOME = Status(1, "返回首页")
+    GO_BACK_TO_HOME_FORCE = Status(2, "返回首页(强制)")
     GO_ROOM_AS_GUEST = Status(101, "进入房间-乘客")
     GO_ROOM_AS_OWNER = Status(102, "进入房间-房主")
     GO_ROOM_PREPARE_AS_GUEST = Status(103, "准备战斗-乘客")
     GO_ROOM_PREPARE_AS_OWNER = Status(104, "准备战斗-房主")
-    GO_ROOM_WAITING_FIGHT = Status(105, "等待战斗开始")
+    GO_ROOM_WAITING_FIGHT_GUEST = Status(105, "等待战斗开始-乘客")
+    GO_ROOM_WAITING_FIGHT_OWNER = Status(106, "等待战斗开始-房主")
     GO_FIGHT_AS_GUEST = Status(201, "前往战斗-乘客")
     GO_FIGHT_AS_OWNER = Status(202, "前往战斗-房主")
     GO_FIGHT = Status(203, "战斗中")
-    GO_FIGHT_ESCAPE = Status(204, "退出房间(灵车)")
+    GO_FIGHT_ESCAPE = Status(204, "退出房间(跳车/灵车)")
     GO_FIGHT_RESULT = Status(205, "战斗结束-结算")
     GO_BELL_CLICKED = Status(301, "检测到铃铛")
     GO_BELL_JOIN = Status(302, "加入铃铛")
-    GO_LOGIN = Status(401, "前往登录")
-    GO_CONTINUE_AFTER_LOGIN = Status(402, "已登录，准备开始检测当前界面")
-    GO_CHECK_INTERFACE = Status(403, "检测当前界面")
-
+    GO_CREATOR_GET_TARGET_BOSS_INFO = Status(401, "获取目标Boss信息")
+    GO_CREATOR_CHECK_BOSS_LIST = Status(402, "寻找目标Boss")
+    GO_CREATOR_CHECK_BOSS_LEVEL = Status(403, "选择目标难度")
+    GO_CREATOR_CREATE_ROOM = Status(404, "创建目标Boss房间")
+    GO_LOGIN = Status(901, "前往登录")
+    GO_CONTINUE_AFTER_LOGIN = Status(902, "已登录，准备开始检测当前界面")
+    GO_CHECK_INTERFACE = Status(903, "检测当前界面")

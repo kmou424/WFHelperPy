@@ -5,15 +5,16 @@ import cv2
 
 from lib.config import ConfigManager
 from lib.constants import CheckColor, CheckPoint, CheckTemplate, \
-    ConfigOptions, ConfigSections, ResultCode, Task, StatusCode, CheckRect
+    ConfigOptions, ConfigSections, ResultCode, Task, StatusCode, CheckRect, ConfigValues
+from lib.resource import Resource
+from lib.timer import Timer
 from lib.utils import AdbTools, Args
 from modules.checker import Checker
-from lib.resource import Resource
 from modules.trackers.bell import Bell
+from modules.trackers.creator import Creator
 from modules.trackers.fight import Fight
 from modules.trackers.login import Login
 from modules.trackers.room import Room
-from modules.trackers.timer import Timer
 
 
 class TrackerThread(threading.Thread):
@@ -26,19 +27,43 @@ class TrackerThread(threading.Thread):
         mGameServer = cfgMan \
             .selectSection(ConfigSections.SECTION_SETTINGS.get()) \
             .getString(ConfigOptions.GAME_SERVER.get())
-        self.mArgs = Args(adb, cfgMan, mGameServer, None)
-        self.mTrackBell = self.mArgs.cfgMan \
+        mTrackBell = cfgMan \
             .selectSection(ConfigSections.SECTION_MAIN.get()) \
             .getBoolean(ConfigOptions.TRACK_BELL_SWITCH.get())
+        mTrackBossList = cfgMan \
+            .selectSection(ConfigSections.SECTION_MAIN.get()) \
+            .getBoolean(ConfigOptions.TRACK_BOSS_LIST_SWITCH.get())
+        mMinBossTemplate = Resource.getMinBossTemplate(cfgMan, mGameServer)
+        mRoomCreator = cfgMan \
+            .selectSection(ConfigSections.SECTION_MAIN.get()) \
+            .getBoolean(ConfigOptions.ROOM_CREATOR_SWITCH.get())
+        mRoomCreatorRecruitmentMode = cfgMan \
+            .selectSection(ConfigSections.SECTION_CUSTOM.get()) \
+            .getString(ConfigOptions.RECRUITMENT_MODE.get(), 'true_false_false')
+        mRoomCreatorGhostMode = cfgMan \
+            .checkoutSection(ConfigSections.SECTION_CUSTOM.get()) \
+            .getString(ConfigOptions.ROOM_CREATOR_GHOST_MODE.get())
+        mRoomCreatorGhostEscapeTime = cfgMan \
+            .checkoutSection(ConfigSections.SECTION_CUSTOM.get()) \
+            .getInt(ConfigOptions.ROOM_CREATOR_GHOST_ESCAPE_TIME.get())
+        timer = Timer()
+        self.mArgs = Args(
+            adb, cfgMan, timer, mGameServer,
+            # TrackBell: 监听铃铛开关 TrackBossList: 监听好友车
+            mTrackBell, mTrackBossList,
+            # MinBossTemplate: 已选择Boss的最低等级模板图 RoomCreator: 是否开启开车模式
+            mMinBossTemplate, mRoomCreator, mRoomCreatorRecruitmentMode,
+            mRoomCreatorGhostMode, mRoomCreatorGhostEscapeTime,
+            # RoomCreatorGhostMode: 灵车模式开关 RoomCreatorGhostEscapeTime: 灵车跳车时间
+            None)
         self.mEscapeDelay = -1
-        self.timer = Timer()
         self.mStartTime = 0
 
     def run(self):
         threading.Thread.run(self)
         self.running = True
         self.mStatus = StatusCode.NO_ERROR
-        self.timer.resetClock()
+        self.mArgs.timer.reset()
         while True:
             # 检查adb
             if not self.mArgs.adb.check():
@@ -52,56 +77,64 @@ class TrackerThread(threading.Thread):
                 print('停止运行')
                 break
             # 判断前台应用
-            if Resource.getGamePackageName(self.mArgs.mGameServer) not in self.mArgs.adb.getTopProcess():
+            if Resource.getGamePackageName(self.mArgs.GameServer) not in self.mArgs.adb.getTopProcess():
                 time.sleep(1)
                 continue
             # 截图
-            self.mArgs.mScreenshot = self.mArgs.adb.takeScreenShot(False)
+            self.mArgs.Screenshot = self.mArgs.adb.takeScreenShot(False)
             # 若分辨率太大则需要缩放
             if self.mArgs.adb.zoom > 1.0:
-                self.mArgs.mScreenshot = cv2.resize(self.mArgs.mScreenshot, (720, 1280), interpolation=cv2.INTER_NEAREST)
+                self.mArgs.Screenshot = cv2.resize(self.mArgs.Screenshot, (720, 1280), interpolation=cv2.INTER_NEAREST)
             print(self.mTask.name)
-            # 意外主城检测
-            self.__check_is_home()
             # 意外弹窗检测
             self.__unexpected_dialog()
             # 意外回到登录界面检测
             self.__unexpected_login_interface()
             # 回到主页事件检测
             self.__back_to_home()
-            # 监听铃铛
+            # 意外主页事件检测
+            self.__check_is_home()
+            # 登录类 追踪器
             self.mTask = Login.track(self.mArgs, self.mTask)
-            if self.mTrackBell:
-                self.mTask = Bell.track(self.mArgs, self.mTask)
+            if Resource.getGamingModeMain(self.mArgs) == ConfigValues.GAMING_MODE_MAIN_GUEST:
+                # 铃铛类 追踪器
+                if self.mArgs.GuestData.TrackBellSwitch:
+                    self.mTask = Bell.track(self.mArgs, self.mTask)
+            if Resource.getGamingModeMain(self.mArgs) == ConfigValues.GAMING_MODE_MAIN_OWNER:
+                # 开车类 追踪器
+                if self.mArgs.RoomCreatorData.Enabled:
+                    self.mTask = Creator.track(self.mArgs, self.mTask)
             self.mTask = Room.track(self.mArgs, self.mTask)
-            if self.mTask == Task.GO_FIGHT_AS_OWNER:
-                self.mEscapeDelay = 5
-                self.mStartTime = time.perf_counter()
+            if self.mArgs.RoomCreatorData.Enabled and \
+                    self.mTask == Task.GO_FIGHT_AS_OWNER and \
+                    self.mArgs.RoomCreatorData.GhostMode == ConfigValues.COMMON_ENABLE.get():
+                self.mEscapeDelay = self.mArgs.RoomCreatorData.GhostEscapeTime
             else:
                 self.mEscapeDelay = -1
-            self.mTask = Fight.track(self.mArgs, self.mTask, self.mStartTime, self.mEscapeDelay)
+            self.mTask = Fight.track(self.mArgs, self.mTask)
             time.sleep(1)
         # 意外退出处理
         self.mTask = Task.NO_TASK
 
     def __check_is_home(self):
         # 如果意外到了主城
-        if Checker.checkBottomBar(self.mArgs.mScreenshot,
-                                  CheckColor.BOTTOM_BAR_ACTIVE_COLOR,
-                                  CheckPoint.BOTTOM_BAR_HOME_POINT):
+        # 通过检测首页的领主战按钮来检测是否在主页
+        # (摒弃掉了旧的颜色检测方法，因为会和其他任务出现冲突)
+        if Checker.checkImageWithTemplate(self.mArgs, CheckTemplate.HOME_BOSS_LIST_BUTTON):
             self.mTask = Task.NO_TASK
 
     def __unexpected_dialog(self):
         # 检测日期改变对话框
         if Checker.checkImageWithTemplate(self.mArgs, CheckTemplate.DIALOG_DATE_CHANGED):
-            self.mArgs.adb.random_click(CheckTemplate.DIALOG_SINGLE_OK.getRect(self.mArgs.mGameServer))
+            self.mArgs.adb.random_click(CheckTemplate.DIALOG_SINGLE_OK.getRect(self.mArgs.GameServer))
             self.mTask = Task.GO_LOGIN
         # 检测继续任务对话框
         if Checker.checkImageWithTemplate(self.mArgs, CheckTemplate.DIALOG_CONTINUE_TASK):
             self.mTask = Task.GO_CONTINUE_AFTER_LOGIN
+        # 普通意外弹窗
         if Checker.checkImageWithTemplate(self.mArgs, CheckTemplate.DIALOG_SINGLE_OK):
             print("检测到了意外的弹窗，回到首页")
-            self.mArgs.adb.random_click(CheckTemplate.DIALOG_SINGLE_OK.getRect(self.mArgs.mGameServer))
+            self.mArgs.adb.random_click(CheckTemplate.DIALOG_SINGLE_OK.getRect(self.mArgs.GameServer))
             if self.mTask.code < Task.GO_LOGIN.code:
                 self.mTask = Task.GO_BACK_TO_HOME
 
@@ -111,15 +144,23 @@ class TrackerThread(threading.Thread):
             self.mTask = Task.GO_LOGIN
 
     def __back_to_home(self):
-        if self.mTask != Task.GO_BACK_TO_HOME:
-            return
-        if not Checker.checkBottomBar(self.mArgs.mScreenshot,
-                                      CheckColor.BOTTOM_BAR_ACTIVE_COLOR,
-                                      CheckPoint.BOTTOM_BAR_HOME_POINT):
-            if Checker.checkBottomBar(self.mArgs.mScreenshot,
-                                      CheckColor.BOTTOM_BAR_INACTIVE_COLOR,
-                                      CheckPoint.BOTTOM_BAR_HOME_POINT):
+        isActive = Checker.checkBottomBar(self.mArgs.Screenshot,
+                                          CheckColor.BOTTOM_BAR_ACTIVE_COLOR,
+                                          CheckPoint.BOTTOM_BAR_HOME_POINT)
+        isInactive = Checker.checkBottomBar(self.mArgs.Screenshot,
+                                            CheckColor.BOTTOM_BAR_INACTIVE_COLOR,
+                                            CheckPoint.BOTTOM_BAR_HOME_POINT)
+
+        if self.mTask == Task.GO_BACK_TO_HOME:
+            if not isActive and isInactive:
                 self.mArgs.adb.random_click(CheckRect.BOTTOM_BAR_HOME_RECT)
+                self.mTask = Task.NO_TASK
+        if self.mTask == Task.GO_BACK_TO_HOME_FORCE:
+            if not Checker.checkImageWithTemplate(self.mArgs, CheckTemplate.HOME_BOSS_LIST_BUTTON):
+                if isActive or isInactive:
+                    self.mArgs.adb.random_click(CheckRect.BOTTOM_BAR_HOME_RECT)
+                    self.mTask = Task.NO_TASK
+            else:
                 self.mTask = Task.NO_TASK
 
 

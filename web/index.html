@@ -56,7 +56,43 @@
         <div id="features-switches" class="mdui-card content-card corner-8px">
           <div class="mdui-card-primary">
             <div class="mdui-card-primary-title">主要功能</div>
-            <div class="mdui-card-primary-subtitle">执行优先级默认从上至下</div>
+            <div class="mdui-card-primary-subtitle">请选择运行模式</div>
+          </div>
+          <div
+            id="gaming_mode_main"
+            class="mdui-card-content mdui-ripple summary-widget-preference"
+          >
+            <label>主要运行模式</label>
+            <div class="radio-group">
+              <div
+                class="radio-chip mdui-chip mdui-color-grey-300 mdui-shadow-0"
+                value="room_guest"
+                ischecked="true"
+              >
+                <span class="mdui-chip-icon mdui-color-grey-400">
+                  <i class="mdui-icon material-icons">radio_button_unchecked</i>
+                </span>
+                <span class="mdui-chip-title">乘客模式</span>
+              </div>
+              <div
+                class="radio-chip mdui-chip mdui-color-grey-300 mdui-shadow-0"
+                value="room_owner"
+                ischecked="false"
+              >
+                <span class="mdui-chip-icon mdui-color-grey-400">
+                  <i class="mdui-icon material-icons">radio_button_unchecked</i>
+                </span>
+                <span class="mdui-chip-title">房主模式</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="room_guest_seetings" class="mdui-card content-card corner-8px">
+          <div class="mdui-card-primary">
+            <div class="mdui-card-primary-title">乘客模式</div>
+            <div class="mdui-card-primary-subtitle">
+              执行优先级默认从上至下 | 更多设置请转至"自定义"
+            </div>
           </div>
           <div class="mdui-card-content switch-preference mdui-ripple">
             <a>铃铛车</a>
@@ -73,6 +109,24 @@
             </label>
           </div>
         </div>
+        <div
+          id="room_creator_settings"
+          class="mdui-card content-card corner-8px"
+        >
+          <div class="mdui-card-primary">
+            <div class="mdui-card-primary-title">房主模式</div>
+            <div class="mdui-card-primary-subtitle">
+              执行优先级默认从上至下 | 更多设置请转至"自定义"
+            </div>
+          </div>
+          <div class="mdui-card-content switch-preference mdui-ripple">
+            <a>发起领主战</a>
+            <label class="mdui-switch">
+              <input id="room_creator_switch" type="checkbox" />
+              <i class="mdui-switch-icon"></i>
+            </label>
+          </div>
+        </div>
       </div>
       <div id="tab-custom">
         <div id="bell_options" class="mdui-card content-card corner-8px">
@@ -82,7 +136,7 @@
           </div>
           <div
             id="bell_selector_mode"
-            class="mdui-card-content mdui-ripple radio-chip-preference"
+            class="mdui-card-content mdui-ripple summary-widget-preference"
           >
             <label>铃铛进房模式</label>
             <div class="radio-group">
@@ -98,7 +152,7 @@
               </div>
               <div
                 class="radio-chip mdui-chip mdui-color-grey-300 mdui-shadow-0"
-                value="boss_selector"
+                value="common_boss_selector"
                 ischecked="false"
               >
                 <span class="mdui-chip-icon mdui-color-grey-400">
@@ -120,13 +174,105 @@
           </div>
           <div class="mdui-card-content mdui-ripple"></div>
         </div>
+        <div
+          id="room_creator_options"
+          class="mdui-card content-card corner-8px"
+        >
+          <div class="mdui-card-primary">
+            <div class="mdui-card-primary-title">发起领主战 - 扩展</div>
+            <div class="mdui-card-primary-subtitle">滴滴! 车车来咯!</div>
+          </div>
+          <div
+            id="room_creator_ghost_mode"
+            class="mdui-card-content summary-widget-preference mdui-ripple"
+          >
+            <label>灵车模式</label>
+            <div class="radio-group">
+              <div
+                class="radio-chip mdui-chip mdui-color-grey-300 mdui-shadow-0"
+                value="enable"
+                ischecked="true"
+              >
+                <span class="mdui-chip-icon mdui-color-grey-400">
+                  <i class="mdui-icon material-icons">radio_button_unchecked</i>
+                </span>
+                <span class="mdui-chip-title">开启</span>
+              </div>
+              <div
+                class="radio-chip mdui-chip mdui-color-grey-300 mdui-shadow-0"
+                value="disable"
+                ischecked="false"
+              >
+                <span class="mdui-chip-icon mdui-color-grey-400">
+                  <i class="mdui-icon material-icons">radio_button_unchecked</i>
+                </span>
+                <span class="mdui-chip-title">关闭</span>
+              </div>
+            </div>
+            <div>
+              <div
+                class="mdui-textfield mdui-textfield-floating-label"
+                style="max-width: 128px; margin: 0"
+              >
+                <label class="mdui-textfield-label">跳车时间(秒)</label>
+                <input
+                  id="room_creator_ghost_escape_time"
+                  class="mdui-textfield-input"
+                  type="number"
+                  value="0"
+                />
+                <div class="mdui-textfield-helper">留空则设置为默认值"5"</div>
+              </div>
+            </div>
+          </div>
+          <div class="mdui-card-content summary-widget-preference mdui-ripple">
+            <label>招募模式</label>
+            <div class="mdui-row-md-5">
+              <div class="mdui-col">
+                <label class="mdui-checkbox">
+                  <input id="double_follow_chekbox" type="checkbox" />
+                  <i class="mdui-checkbox-icon"></i>
+                  对互相关注者公开
+                </label>
+              </div>
+              <div class="mdui-col">
+                <label class="mdui-checkbox">
+                  <input id="single_follow_chekbox" type="checkbox" />
+                  <i class="mdui-checkbox-icon"></i>
+                  对关注者公开
+                </label>
+              </div>
+              <div class="mdui-col">
+                <label class="mdui-checkbox">
+                  <input id="random_chekbox" type="checkbox" />
+                  <i class="mdui-checkbox-icon"></i>
+                  随机招募
+                </label>
+              </div>
+            </div>
+          </div>
+          <div
+            id="room_creator_boss"
+            class="mdui-card-content summary-widget-preference mdui-ripple"
+          >
+            <label>选择Boss</label>
+            <div class="radio-group"></div>
+          </div>
+          <div
+            id="room_creator_boss_level"
+            class="mdui-card-content summary-widget-preference mdui-ripple"
+          >
+            <label>选择难度</label>
+            <div class="radio-group"></div>
+          </div>
+        </div>
         <div class="mdui-card content-card corner-8px">
           <div class="mdui-card-primary">
             <div class="mdui-card-primary-title">Boss 筛选器</div>
             <div class="mdui-card-primary-subtitle">今天想打哪些Boss呢？</div>
           </div>
           <div
-            id="boss_selector"
+            id="common_boss_selector"
             class="mdui-card-content mdui-collapse"
             mdui-collapse
           ></div>
@@ -151,7 +297,7 @@
           </div>
           <div
             id="server_selector"
-            class="mdui-card-content mdui-ripple radio-chip-preference"
+            class="mdui-card-content mdui-ripple summary-widget-preference"
           >
             <label>选择区服</label>
             <div class="radio-group">

@@ -37,6 +37,9 @@ class BossInfo {
   getLevels() {
     return this.item['levels'].split(' ');
   }
+  getOriginalLevels() {
+    return this.item['levels'];
+  }
 }
 
 class CheckBoxCommon {
@@ -179,8 +182,49 @@ class ChipRadioGroup {
   static custom_click_chip_value = ['bell_boss_selector_advanced'];
   static custom_click_chip_check_fun = [DialogManager.showBellSelectorAdvanced];
   static custom_click_chip_check_fun_arg = [true];
-  static custom_click_chip_uncheck_fun = [null];
-  static custom_click_chip_uncheck_fun_arg = [null];
+  static RADIO_CHIP_TEMPLATE =
+    '<div\
+        class="radio-chip mdui-chip mdui-color-grey-300 mdui-shadow-0"\
+        value="##VALUE##"\
+        levels="##LEVELS##"\
+        ischecked="false"\
+        style="margin-right: 4px"\
+     >\
+        <span class="mdui-chip-icon mdui-color-grey-400">\
+          <i class="mdui-icon material-icons">radio_button_unchecked</i>\
+        </span>\
+        <span class="mdui-chip-title">##NAME##</span>\
+     </div>';
+  static addBoss(obj, level_obj, boss) {
+    // 目前暂不支持活动Boss
+    if (boss.getType() == 'special') return;
+    var radio_chip = $(
+      ChipRadioGroup.RADIO_CHIP_TEMPLATE.replace('##VALUE##', boss.getId())
+        .replace('##LEVELS##', boss.getOriginalLevels())
+        .replace('##NAME##', boss.getName())
+    );
+    obj.find('div.radio-group').append(radio_chip);
+    ChipRadioGroup.findChipByValue(obj, boss.getId()).click(function () {
+      if (!server_status.getRunning()) {
+        ChipRadioGroup.addLevels(level_obj, $(this).attr('levels'));
+        ChipRadioGroup.initRadio(level_obj, undefined);
+        ChipRadioGroup.bindClick();
+      }
+    });
+  }
+  static addLevels(obj, levels) {
+    var root = obj.find('div.radio-group');
+    root.empty();
+    levels = levels.split(' ');
+    for (var i = 0; i < levels.length; ++i) {
+      var radio_chip = $(
+        ChipRadioGroup.RADIO_CHIP_TEMPLATE.replace('##VALUE##', levels[i])
+          .replace('##LEVELS##', 'null')
+          .replace('##NAME##', BossInfo.BOSS_LEVEL_NAME_TABLE[levels[i]])
+      );
+      root.append(radio_chip);
+    }
+  }
   static initRadio(obj, value) {
     var target = 0;
     obj
@@ -214,7 +258,6 @@ class ChipRadioGroup {
       .find('div.radio-group')
       .children('div.radio-chip')
       .each(function () {
-        Log.o($(this).attr('value'));
         if ($(this).attr('value') == value) {
           ret = $(this);
         }
@@ -229,25 +272,14 @@ class ChipRadioGroup {
           .children('div.radio-chip')
           .each(function () {
             var uncheck_ret = ChipRadioGroup.uncheck($(this));
-            if (uncheck_ret) {
-              // 判断被uncheck掉的是不是需要执行uncheck函数的Chip
-              if (
-                ChipRadioGroup.custom_click_chip_value.includes(
-                  $(this).attr('value')
-                )
-              ) {
-                var idx = ChipRadioGroup.custom_click_chip_value.indexOf(
-                  $(this).attr('value')
-                );
-                if (ChipRadioGroup.custom_click_chip_uncheck_fun[idx] != null) {
-                  ChipRadioGroup.custom_click_chip_uncheck_fun[idx](
-                    ChipRadioGroup.custom_click_chip_uncheck_fun_arg[idx]
-                  );
-                }
-              }
-            }
           });
         ChipRadioGroup.check($(this));
+      }
+    });
+  }
+  static bindCustomClick() {
+    $('.radio-chip').click(function () {
+      if (!server_status.getRunning()) {
         // 判断本次check操作是不是需要执行check函数的Chip
         if (
           ChipRadioGroup.custom_click_chip_value.includes($(this).attr('value'))
@@ -335,7 +367,7 @@ class OutlineCollapseCard {
             ##TEMPLATE2##\
         </label>\
      </div>';
-  static add(container, boss) {
+  static addBoss(container, boss) {
     var end_time = '长期有效';
     var name_prefix = '';
     if (boss.getType() == 'special') {
@@ -441,17 +473,35 @@ class UIManager {
     $('#toolbar_save_btn').click(function () {
       if (!server_status.getRunning()) {
         var mData = {
+          'GamingModeMain': ChipRadioGroup.getChecked($('#gaming_mode_main')),
           'TrackBellSwitch': $('#track_bell_switch').prop('checked'),
           'TrackBossListSwitch': $('#track_boss_list_switch').prop('checked'),
+          'RoomCreatorSwitch': $('#room_creator_switch').prop('checked'),
           'BellSelectorMode': ChipRadioGroup.getChecked(
             $('#bell_selector_mode')
-          ),
-          'BossSelector': OutlineCollapseCard.getCheckedAsStrList(
-            $('#boss_selector')
           ),
           'BellBossSelectorAdvanced': $(
             '#bell_boss_selector_advanced_edittext'
           ).val(),
+          'RoomCreatorGhostMode': ChipRadioGroup.getChecked(
+            $('#room_creator_ghost_mode')
+          ),
+          'RoomCreatorGhostEscapeTime': $(
+            '#room_creator_ghost_escape_time'
+          ).val(),
+          'RoomCreatorBossSelector':
+            ChipRadioGroup.getChecked($('#room_creator_boss')) +
+            '_' +
+            ChipRadioGroup.getChecked($('#room_creator_boss_level')),
+          'RecruitmentMode':
+            CheckBoxCommon.isChecked($('#double_follow_chekbox')) +
+            '_' +
+            CheckBoxCommon.isChecked($('#single_follow_chekbox')) +
+            '_' +
+            CheckBoxCommon.isChecked($('#random_chekbox')),
+          'CommonBossSelector': OutlineCollapseCard.getCheckedAsStrList(
+            $('#common_boss_selector')
+          ),
           'DeviceADBSerial': $('#device_adb_serial').val(),
           'GameServer': ChipRadioGroup.getChecked($('#server_selector')),
           'EnableTabLogSwitch': $('#enable_tab_log_switch').prop('checked'),
@@ -462,21 +512,30 @@ class UIManager {
     });
   }
   static initBossInfo(result) {
-    $('#boss_selector').empty();
+    Log.o('initBossInfo');
+    // Clean up
+    $('#common_boss_selector').empty();
+    $('#room_creator_boss').find('div.radio-group').empty();
+    $('#room_creator_boss_level').find('div.radio-group').empty();
     for (var i = 0; i < result.length; ++i) {
-      var b = new BossInfo(result[i]);
-      OutlineCollapseCard.add($('#boss_selector'), b);
+      var boss = new BossInfo(result[i]);
+      OutlineCollapseCard.addBoss($('#common_boss_selector'), boss);
+      ChipRadioGroup.addBoss(
+        $('#room_creator_boss'),
+        $('#room_creator_boss_level'),
+        boss
+      );
       DialogManager.appendBossInfoHelper(
         $('#bell_boss_selector_advanced_boss_name_id_table'),
-        b
+        boss
       );
     }
     Action.sendAction(Action.ACTION_GET_SELECTED_BOSS);
+    ChipRadioGroup.bindClick();
   }
   static updateBossInfo(result) {
     Log.o('updateBossInfo');
-    Log.o(result);
-    $('#boss_selector')
+    $('#common_boss_selector')
       .children('div.outline-collapse-card')
       .each(function () {
         var boss_name =
@@ -487,13 +546,40 @@ class UIManager {
           .children('div.mdui-col')
           .each(function () {
             var checkbox = $(this).find('label input');
-            if (result.includes(boss_name + checkbox.attr('value'))) {
+            if (
+              result['CommonBossSelector'].includes(
+                boss_name + checkbox.attr('value')
+              )
+            ) {
               CheckBoxCommon.check(checkbox);
             } else {
               CheckBoxCommon.uncheck(checkbox);
             }
           });
       });
+    // 房主选项 初始化
+    // 0: Boss ID, 1: Boss Level
+    var room_creator_boss_selector =
+      result['RoomCreatorBossSelector'].split('_');
+
+    ChipRadioGroup.initRadio(
+      $('#room_creator_boss'),
+      room_creator_boss_selector[0]
+    );
+    ChipRadioGroup.addLevels(
+      $('#room_creator_boss_level'),
+      $(
+        ChipRadioGroup.findChipByValue(
+          $('#room_creator_boss'),
+          ChipRadioGroup.getChecked($('#room_creator_boss'))
+        )
+      ).attr('levels')
+    );
+    ChipRadioGroup.initRadio(
+      $('#room_creator_boss_level'),
+      room_creator_boss_selector[1]
+    );
+    ChipRadioGroup.bindClick();
   }
   static updateEnabled(is_running) {
     var enableWidgetList = [
@@ -526,13 +612,22 @@ class UIManager {
 
 class Updater {
   static run(result) {
+    // 主要运行模式
+    ChipRadioGroup.initRadio($('#gaming_mode_main'), result['GamingModeMain']);
+
     // 铃铛开关
     SwitchPreference.update($('#track_bell_switch'), result['TrackBellSwitch']);
 
     // 关注列表进房开关
     SwitchPreference.update(
-      $('track_boss_list_switch'),
+      $('#track_boss_list_switch'),
       result['TrackBossListSwitch']
+    );
+
+    // 开车开关
+    SwitchPreference.update(
+      $('#room_creator_switch'),
+      result['RoomCreatorSwitch']
     );
 
     // 铃铛模式
@@ -546,6 +641,36 @@ class Updater {
       $('#bell_boss_selector_advanced_edittext'),
       result['BellBossSelectorAdvanced']
     );
+
+    // 灵车开关
+    ChipRadioGroup.initRadio(
+      $('#room_creator_ghost_mode'),
+      result['RoomCreatorGhostMode']
+    );
+
+    // 灵车 - 跳车时间
+    EditText.update(
+      $('#room_creator_ghost_escape_time'),
+      result['RoomCreatorGhostEscapeTime']
+    );
+
+    // 招募模式
+    var recruitment_mode = result['RecruitmentMode'];
+    if (recruitment_mode != '' && recruitment_mode != undefined) {
+      recruitment_mode = recruitment_mode.split('_');
+      CheckBoxCommon.updateCheck(
+        $('#double_follow_chekbox'),
+        recruitment_mode[0] == 'true'
+      );
+      CheckBoxCommon.updateCheck(
+        $('#single_follow_chekbox'),
+        recruitment_mode[1] == 'true'
+      );
+      CheckBoxCommon.updateCheck(
+        $('#random_chekbox'),
+        recruitment_mode[2] == 'true'
+      );
+    }
 
     // 设备serial文本框
     EditText.update($('#device_adb_serial'), result['DeviceADBSerial']);
@@ -588,7 +713,7 @@ class Action {
     'refreshState',
     'takeScreenshotForNow',
     'getBossInfoJson',
-    'getSelectedBossInfoJson',
+    'getStoredBossInfoJson',
   ];
   static #ACTION_FUNC = [
     Updater.refreshState,
@@ -610,11 +735,12 @@ class Action {
   }
 }
 
+Action.sendAction(Action.ACTION_GET_BOSS_INFO_JSON);
 UIManager.bindRunButtonClick();
 UIManager.bindSaveButtonClick();
 SwitchPreference.bindClick();
 ChipRadioGroup.bindClick();
-Action.sendAction(Action.ACTION_GET_BOSS_INFO_JSON);
+ChipRadioGroup.bindCustomClick();
 KRequest.updatePage('/', null);
 
 mdui.mutation();
