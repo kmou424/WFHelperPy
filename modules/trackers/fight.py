@@ -40,14 +40,18 @@ class Fight:
                     mArgs.adb.random_click(CheckTemplate.RESULT_OFFLINE_EXIT_ROOM_BUTTON.getRect(mArgs.GameServer))
                     return Task.GO_BACK_TO_HOME_FORCE
             # TODO: 提供离开房间和返回房间两种不同的选项
-            if Checker.checkImageWithTemplate(mArgs, CheckTemplate.RESULT_BOTTOM_EXIT_ROOM_BUTTON):
+            if Checker.checkImageWithTemplate(mArgs, CheckTemplate.RESULT_BOTTOM_EXIT_ROOM_BUTTON) or \
+                    Checker.checkImageWithTemplate(mArgs, CheckTemplate.RESULT_BOTTOM_DISBAND_ROOM_BUTTON):
                 mArgs.adb.random_click(CheckTemplate.RESULT_BOTTOM_EXIT_ROOM_BUTTON.getRect(mArgs.GameServer))
                 return Task.GO_BACK_TO_HOME_FORCE
             # 如果已经出现底栏了，则直接回到主城
             if Checker.hasBottomBar(mArgs.Screenshot):
                 return Task.GO_BACK_TO_HOME
-            # 没要到最后一步，点击继续(无脑一直点可以用来跳过一些特殊事件，例如升级等)
-            mArgs.adb.random_click(CheckTemplate.RESULT_BOTTOM_CONTINUE_BUTTON.getRect(mArgs.GameServer))
+            # 没有检测到继续按钮就点空白位置 (无脑一直点可以用来跳过一些特殊事件，例如升级等)
+            if Checker.checkImageWithTemplate(mArgs, CheckTemplate.RESULT_BOTTOM_CONTINUE_BUTTON):
+                mArgs.adb.random_click(CheckTemplate.RESULT_BOTTOM_CONTINUE_BUTTON.getRect(mArgs.GameServer))
+            else:
+                mArgs.adb.random_click(CheckTemplate.RESULT_BOTTOM_BLANK_SPACE.getRect(mArgs.GameServer))
         if task == Task.GO_FIGHT_ESCAPE:
             # 检查确认放弃对话框并点击确认
             # 优先级最高

@@ -345,6 +345,13 @@ class CheckTemplate:
         }
     )
     # 结算界面
+    RESULT_BOTTOM_BLANK_SPACE = Template(
+        'Result_bottom_blank_space',
+        {
+            'cn': Rect(Point(400, 400), Point(704, 704)),
+            'tw': Rect(Point(400, 400), Point(704, 704))
+        }
+    )
     RESULT_BOTTOM_CONTINUE_BUTTON = Template(
         'Result_bottom_continue_button',
         {
@@ -354,6 +361,13 @@ class CheckTemplate:
     )
     RESULT_BOTTOM_EXIT_ROOM_BUTTON = Template(
         'Result_bottom_exit_room_button',
+        {
+            'cn': Rect(Point(102, 1174), Point(326, 1232)),
+            'tw': Rect(Point(102, 1174), Point(326, 1232))
+        }
+    )
+    RESULT_BOTTOM_DISBAND_ROOM_BUTTON = Template(
+        'Result_bottom_disband_room_button',
         {
             'cn': Rect(Point(102, 1174), Point(326, 1232)),
             'tw': Rect(Point(102, 1174), Point(326, 1232))
