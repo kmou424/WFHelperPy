@@ -23,10 +23,11 @@ class Checker:
         return False
 
     @staticmethod
-    def checkImageWithTemplate(mArg: Args, mTemplate: Template):
+    def checkImageWithTemplate(mArg: Args, mTemplate: Template, accuracy=0.85):
         return str(Checker.checkImage(
             Resource.cropImg(mArg.Screenshot, mTemplate.getRect(mArg.GameServer)),
-            Resource.getTemplate(mArg.GameServer, mTemplate.getName())
+            Resource.getTemplate(mArg.GameServer, mTemplate.getName()),
+            accuracy
         )) != 'None'
 
     @staticmethod

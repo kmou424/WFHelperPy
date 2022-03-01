@@ -8,7 +8,7 @@ class Bell:
     @staticmethod
     def track(mArgs: Args, task: Task):
         if task == Task.NO_TASK:
-            if Checker.checkImageWithTemplate(mArgs, CheckTemplate.HOME_BELL_ACTIVE):
+            if Checker.checkImageWithTemplate(mArgs, CheckTemplate.HOME_BELL_ACTIVE, accuracy=0.65):
                 mArgs.adb.random_click(CheckTemplate.HOME_BELL_ACTIVE.getRect(mArgs.GameServer))
                 return Task.GO_BELL_CLICKED
         # 点击铃铛后
