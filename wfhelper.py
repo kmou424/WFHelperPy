@@ -41,7 +41,7 @@ data = {
     ConfigOptions.ROOM_CREATOR_GHOST_MODE.get():
         cfgMan
         .checkoutSection(ConfigSections.SECTION_CUSTOM.get())
-        .getString(ConfigOptions.ROOM_CREATOR_GHOST_MODE.get(), ConfigValues.COMMON_ENABLE.get()),
+        .getString(ConfigOptions.ROOM_CREATOR_GHOST_MODE.get(), ConfigValues.COMMON_DISABLE.get()),
     ConfigOptions.ROOM_CREATOR_GHOST_ESCAPE_TIME.get():
         cfgMan
         .checkoutSection(ConfigSections.SECTION_CUSTOM.get())
