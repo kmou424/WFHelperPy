@@ -26,7 +26,7 @@ class TrackerThread(threading.Thread):
         cfgMan = ConfigManager('config.ini', writable=False)
         mGameServer = cfgMan \
             .selectSection(ConfigSections.SECTION_SETTINGS.get()) \
-            .getString(ConfigOptions.GAME_SERVER.get())
+            .getString(ConfigOptions.GAME_SERVER.get(), default='cn')
         mTrackBell = cfgMan \
             .selectSection(ConfigSections.SECTION_MAIN.get()) \
             .getBoolean(ConfigOptions.TRACK_BELL_SWITCH.get())
