@@ -72,10 +72,6 @@ class TrackerThread(threading.Thread):
                 self.mTask = Task.NO_TASK
                 self.mStatus = StatusCode.ADB_CONNECT_INTERRUPT
                 break
-            # 执行完本次任务再停止
-            if not self.running and self.mTask == Task.NO_TASK:
-                print('停止运行')
-                break
             # 判断前台应用
             if Resource.getGamePackageName(self.mArgs.GameServer) not in self.mArgs.adb.getTopProcess():
                 time.sleep(1)
@@ -94,6 +90,10 @@ class TrackerThread(threading.Thread):
             self.__back_to_home()
             # 意外主页事件检测
             self.__check_is_home()
+            # 执行完本次任务再停止
+            if not self.running and self.mTask == Task.NO_TASK:
+                print('停止运行')
+                break
             # 登录类 追踪器
             self.mTask = Login.track(self.mArgs, self.mTask)
             if Resource.getGamingModeMain(self.mArgs) == ConfigValues.GAMING_MODE_MAIN_GUEST:
