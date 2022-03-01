@@ -45,6 +45,7 @@ Features:
 
 ```bash
 # 安装前请准备 python3 python-pip git
+# 国内用户可选择使用Gitee镜像: https://gitee.com/kmou424/WFHelperPy
 $ git clone https://github.com/kmou424/WFHelperPy
 $ cd WFHelperPy
 $ pip install -r requirements.txt
