@@ -182,8 +182,11 @@ def saveAllData():
         data[ConfigOptions.ROOM_CREATOR_GHOST_ESCAPE_TIME.get()] = cfgMan.getString(
             ConfigOptions.ROOM_CREATOR_GHOST_ESCAPE_TIME.get())
         # RECRUITMENT_MODE
+        mRecruitmentMode = request.form[ConfigOptions.RECRUITMENT_MODE.get()]
+        if mRecruitmentMode == 'false_false_false':
+            mRecruitmentMode = 'true_false_false'
         cfgMan.setValue(ConfigOptions.RECRUITMENT_MODE.get(),
-                        request.form[ConfigOptions.RECRUITMENT_MODE.get()])
+                        mRecruitmentMode)
         data[ConfigOptions.RECRUITMENT_MODE.get()] = cfgMan.getString(
             ConfigOptions.RECRUITMENT_MODE.get())
         # ROOM_CREATOR_BOSS_SELECTOR
