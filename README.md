@@ -41,30 +41,33 @@ Features:
 
 ### 如何安装
 
-#### 1. 环境安装与配置
+#### 1-1. 环境安装与配置
 
 ```bash
 # 安装前请准备 python3 python-pip git
 # 国内用户可选择使用Gitee镜像: https://gitee.com/kmou424/WFHelperPy
 $ git clone https://github.com/kmou424/WFHelperPy
 $ cd WFHelperPy
-$ pip install -r requirements.txt
+# 执行安装脚本
+# 将会在本地生成虚拟环境并自动拉取远程模板仓库
+$ python install.py
 ```
 
-#### 2. 获取模板图片(必需)
+安装完成后，目录下将会生成运行脚本，它将以`run`作为文件名，扩展名视操作系统而定(Windows为`.bat`，Linux/MacOS为`.sh`)
+
+#### 1-2. (可选) 对于安卓模拟器 (Windows)
+
+如果你是安卓模拟器用户，请将WFHelperPy目录下的`tools`目录内的`Lib/site-packages/adbutils/binaries/adb.exe`复制出来，并替换掉模拟器安装目录下的**模拟器自带的adb**。
+
+以夜神模拟器为例，夜神模拟器自带的adb为模拟器安装目录下的`bin/nox_adb.exe`，我们将`Lib/site-packages/adbutils/binaries/adb.exe`复制出来并重命名为`nox_adb.exe`，覆盖掉夜神模拟器安装目录内的adb。
+
+#### 2. 运行并访问控制面板
 
 ```bash
-# 为了方便后续模板更新, 模板仓库放在了gitee
-# 仓库地址: https://gitee.com/kmou424/wfhelperpy_template
-$ git clone https://gitee.com/kmou424/wfhelperpy_template template
-```
-
-#### 3. 运行并访问控制面板
-
-```bash
-$ python wfhelper.py
+$ python run.bat
+# Linux或MacOS请运行run.sh
 # 例如:
-# $ python wfhelper.py
+# $ python run.bat
 # * Serving Flask app "wfhelper" (lazy loading)
 # * Environment: production
 #   WARNING: This is a development server. Do not use it in a production deployment.
@@ -79,14 +82,13 @@ $ python wfhelper.py
 
 ### 更新
 
+**每次使用软件之前请尽量先执行以下两项更新后再启动**
+
 #### 检查并更新模板图片
 
 ```bash
-# 检查更新前请确保完成过第一次的获取模板图片
 $ python template_updater.py
 ```
-
-- 此方法虽然也可以用来第一次获取所有模板图片, 但是速度会**非常非常慢**, 远远不如Git
 
 #### 更新主程序
 
