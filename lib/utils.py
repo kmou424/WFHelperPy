@@ -80,7 +80,10 @@ class FileCtrl:
 
     @staticmethod
     def rmtree(path: str):
-        shutil.rmtree(path, onerror=FileCtrl.__onRmtreeError)
+        if 'linux' in sys.platform or 'mac' in sys.platform:
+            os.system('rm -rf {path}'.format(path=path))
+        else:
+            return shutil.rmtree(path, onerror=FileCtrl.__onRmtreeError)
 
     @staticmethod
     def __onRmtreeError(func, path, execinfo):

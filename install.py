@@ -54,21 +54,28 @@ def removeOldRunScript():
 
 def installRequirements():
     Logger.displayLog("检查并安装依赖")
-    ret = os.system(
+    _ret = os.system(
         '{pip_path} install -r requirements.txt'.format(pip_path=VENV_PIP_PATH.replace('/', PATH_DELIMITER)))
     removeOldRunScript()
-    if ret == 0:
+    if _ret == 0:
         Logger.displayLog("安装依赖成功")
         generateRunScript()
     else:
-        Logger.displayLog("安装依赖失败", Logger.LOG_LEVEL_ERROR, quit_code=ret)
+        Logger.displayLog("安装依赖失败", Logger.LOG_LEVEL_ERROR, quit_code=_ret)
 
 
 Logger.displayLog("正在检查模板文件")
+# 控制台返回值
+ret = 0
 if Path(TEMPLATE_PATH).exists():
     Logger.displayLog("检测到旧的模板文件")
     Logger.displayLog("更新上游文件")
-    os.system('git -C {template_path} pull'.format(template_path=TEMPLATE_PATH))
+    ret = os.system('git -C {template_path} pull'.format(template_path=TEMPLATE_PATH))
+    if ret != 0:
+        Logger.displayLog("更新上游失败", Logger.LOG_LEVEL_WARNING)
+        Logger.displayLog("尝试删除现有模板文件并重新拉取")
+        FileCtrl.rmtree(TEMPLATE_PATH)
+        cloneTemplateRepo()
 else:
     cloneTemplateRepo()
 
