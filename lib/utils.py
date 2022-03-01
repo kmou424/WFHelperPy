@@ -1,6 +1,9 @@
 import hashlib
 import os
 import random
+import shutil
+import stat
+import sys
 import time
 from pathlib import Path
 from urllib import request
@@ -43,6 +46,16 @@ class FileCtrl:
         print('Completed')
 
     @staticmethod
+    def getPathDelimiter():
+        if 'win' in sys.platform:
+            return '\\'
+        elif 'mac' in sys.platform or 'linux' in sys.platform:
+            return '/'
+        else:
+            print("error: Unrecognized platform " + sys.platform + " or not support")
+            exit(1)
+
+    @staticmethod
     def getFileHash(filename: str) -> str:
         with open(filename, 'rb') as f:
             sha1obj = hashlib.sha1()
@@ -64,6 +77,15 @@ class FileCtrl:
     @staticmethod
     def isExist(filename: str) -> bool:
         return Path(filename).exists()
+
+    @staticmethod
+    def rmtree(path: str):
+        shutil.rmtree(path, onerror=FileCtrl.__onRmtreeError)
+
+    @staticmethod
+    def __onRmtreeError(func, path, execinfo):
+        os.chmod(path, stat.S_IWRITE)
+        func(path)
 
 
 class Point:
@@ -276,7 +298,8 @@ class Args:
         self.GameServer = mGameServer
         self.GuestData = _GuestData(mTrackBell, mTrackBossList)
         self.RoomCreatorData = _RoomCreatorData(
-            mMinBossTemplate, mRoomCreatorEnabled, mRoomCreatorRecruitmentMode, mRoomCreatorGhostMode, mRoomCreatorGhostEscapeTime
+            mMinBossTemplate, mRoomCreatorEnabled, mRoomCreatorRecruitmentMode, mRoomCreatorGhostMode,
+            mRoomCreatorGhostEscapeTime
         )
 
         self.Screenshot = mScreenshot

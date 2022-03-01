@@ -12,7 +12,7 @@ class Time:
 
     @staticmethod
     def getTimeByStandardFormat():
-        return time.strftime('%Y-%m-%d %H:%M:%S %Z', time.localtime(time.time()))
+        return time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
 
     @staticmethod
     def getTimeByCustomFormat(fmt: str):

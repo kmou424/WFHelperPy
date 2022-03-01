@@ -1,3 +1,6 @@
 /template
+/tools
 __pycache__
 config.ini
+*.bat
+*.sh

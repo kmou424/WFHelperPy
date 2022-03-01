@@ -78,7 +78,7 @@ class Template:
         if server_name not in self.__rect_dict.keys():
             print('Error: There is no template \"{template_name}\" for \"{server_name}\"'
                   .format(template_name=self.__template_name, server_name=server_name))
-            Logger.error(-1)
+            Logger.quit(-1)
         return self.__rect_dict[server_name]
 
     def getName(self):
