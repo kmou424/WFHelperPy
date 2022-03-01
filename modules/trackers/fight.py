@@ -28,7 +28,8 @@ class Fight:
             # 判断续战
             if Checker.checkImageWithTemplate(mArgs, CheckTemplate.FIGHT_REBORN_BUTTON_TEXT):
                 print("战败了...")
-                return Task.GO_BACK_TO_HOME
+                if Checker.hasBottomBar(mArgs.Screenshot):
+                    return Task.GO_BACK_TO_HOME_FORCE
             # 判断结算
             if Checker.checkImageWithTemplate(mArgs, CheckTemplate.RESULT_BOTTOM_CONTINUE_BUTTON):
                 task = Task.GO_FIGHT_RESULT
