@@ -398,6 +398,8 @@ class Const:
     BOSS_LIST_CARD_LEFT_X = 24
     # Boss列表卡片 右边坐标 X
     BOSS_LIST_CARD_RIGHT_X = 695
+    # "i"图标左侧(防止点到"i"图标)
+    BOSS_LIST_CARD_RIGHT_X_NO_INFO = 648
 
 
 class ResultCode:

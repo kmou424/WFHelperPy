@@ -62,6 +62,8 @@ class Checker:
                 Resource.cropImg(mArgs.Screenshot, target_rect),
                 Resource.getTemplate(mArgs.GameServer, CheckTemplate.COMMON_CARD_INFO_ICON.getName())
             )) != 'None'
+            # 缩减卡片右边x，防止点到"i"按钮
+            target_rect.right_bottom.x = Const.BOSS_LIST_CARD_RIGHT_X_NO_INFO
             # 最后把卡片Rect赋值给返回值的Rect
             ret.rect = target_rect
         return ret
