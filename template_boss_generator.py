@@ -34,6 +34,9 @@ if __name__ == "__main__":
         save_file = "{basedir}/Boss_{tin}.png"\
             .format(basedir=save_dir, tin=boss_template_img_name)
         p = adb.takeScreenShot(True)
+        # 若分辨率太大则需要缩放
+        if adb.zoom > 1.0:
+            p = cv2.resize(p, (720, 1280), interpolation=cv2.INTER_NEAREST)
         p = p[left_top_y:right_bottom_y, left_top_x:right_bottom_x]
         cv2.imwrite(save_file, p)
     else:
