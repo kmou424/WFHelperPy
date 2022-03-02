@@ -47,7 +47,7 @@ class Fight:
                 return Task.GO_BACK_TO_HOME_FORCE
             # 如果已经出现底栏了，则直接回到主城
             if Checker.hasBottomBar(mArgs.Screenshot):
-                return Task.GO_BACK_TO_HOME
+                return Task.GO_BACK_TO_HOME_FORCE
             # 没有检测到继续按钮就点空白位置 (无脑一直点可以用来跳过一些特殊事件，例如升级等)
             if Checker.checkImageWithTemplate(mArgs, CheckTemplate.RESULT_BOTTOM_CONTINUE_BUTTON):
                 mArgs.adb.random_click(CheckTemplate.RESULT_BOTTOM_CONTINUE_BUTTON.getRect(mArgs.GameServer))
