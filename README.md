@@ -64,10 +64,10 @@ $ python install.py
 #### 2. 运行并访问控制面板
 
 ```bash
-$ python run.bat
-# Linux或MacOS请运行run.sh
+$ .\run.bat
+# Linux或MacOS请运行./run.sh
 # 例如:
-# $ python run.bat
+# $ .\run.bat
 # * Serving Flask app "wfhelper" (lazy loading)
 # * Environment: production
 #   WARNING: This is a development server. Do not use it in a production deployment.
