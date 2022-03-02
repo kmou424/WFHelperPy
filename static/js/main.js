@@ -184,13 +184,13 @@ class ChipRadioGroup {
   static custom_click_chip_check_fun_arg = [true];
   static RADIO_CHIP_TEMPLATE =
     '<div\
-        class="radio-chip mdui-chip mdui-color-grey-300 mdui-shadow-0"\
+        class="radio-chip mdui-chip mdui-shadow-0"\
         value="##VALUE##"\
         levels="##LEVELS##"\
         ischecked="false"\
         style="margin-right: 4px"\
      >\
-        <span class="mdui-chip-icon mdui-color-grey-400">\
+        <span class="mdui-chip-icon">\
           <i class="mdui-icon material-icons">radio_button_unchecked</i>\
         </span>\
         <span class="mdui-chip-title">##NAME##</span>\

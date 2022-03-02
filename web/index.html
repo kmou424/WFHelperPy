@@ -66,24 +66,24 @@
             id="gaming_mode_main"
             class="mdui-card-content mdui-ripple summary-widget-preference"
           >
-            <label>主要运行模式</label>
+            <label class="summary-wdiget-preference-title">主要运行模式</label>
             <div class="radio-group">
               <div
-                class="radio-chip mdui-chip mdui-color-grey-300 mdui-shadow-0"
+                class="radio-chip mdui-chip mdui-shadow-0"
                 value="room_guest"
                 ischecked="true"
               >
-                <span class="mdui-chip-icon mdui-color-grey-400">
+                <span class="mdui-chip-icon">
                   <i class="mdui-icon material-icons">radio_button_unchecked</i>
                 </span>
                 <span class="mdui-chip-title">乘客模式</span>
               </div>
               <div
-                class="radio-chip mdui-chip mdui-color-grey-300 mdui-shadow-0"
+                class="radio-chip mdui-chip mdui-shadow-0"
                 value="room_owner"
                 ischecked="false"
               >
-                <span class="mdui-chip-icon mdui-color-grey-400">
+                <span class="mdui-chip-icon">
                   <i class="mdui-icon material-icons">radio_button_unchecked</i>
                 </span>
                 <span class="mdui-chip-title">房主模式</span>
@@ -142,20 +142,20 @@
             id="bell_selector_mode"
             class="mdui-card-content mdui-ripple summary-widget-preference"
           >
-            <label>铃铛进房模式</label>
+            <label class="summary-wdiget-preference-title">铃铛进房模式</label>
             <div class="radio-group">
               <div
-                class="radio-chip mdui-chip mdui-color-grey-300 mdui-shadow-0"
+                class="radio-chip mdui-chip mdui-shadow-0"
                 value="no"
                 ischecked="true"
               >
-                <span class="mdui-chip-icon mdui-color-grey-400">
+                <span class="mdui-chip-icon">
                   <i class="mdui-icon material-icons">radio_button_unchecked</i>
                 </span>
                 <span class="mdui-chip-title">全部参加</span>
               </div>
               <div
-                class="radio-chip mdui-chip mdui-color-grey-300 mdui-shadow-0"
+                class="radio-chip mdui-chip mdui-shadow-0"
                 value="common_boss_selector"
                 ischecked="false"
               >
@@ -165,11 +165,11 @@
                 <span class="mdui-chip-title">由"Boss 筛选器"决定</span>
               </div>
               <div
-                class="radio-chip mdui-chip mdui-color-grey-300 mdui-shadow-0"
+                class="radio-chip mdui-chip mdui-shadow-0"
                 value="bell_boss_selector_advanced"
                 ischecked="false"
               >
-                <span class="mdui-chip-icon mdui-color-grey-400">
+                <span class="mdui-chip-icon">
                   <i class="mdui-icon material-icons">radio_button_unchecked</i>
                 </span>
                 <span class="mdui-chip-title">自定义筛选器(高级)</span>
@@ -190,24 +190,24 @@
             id="room_creator_ghost_mode"
             class="mdui-card-content summary-widget-preference mdui-ripple"
           >
-            <label>灵车模式</label>
+            <label class="summary-wdiget-preference-title">灵车模式</label>
             <div class="radio-group">
               <div
-                class="radio-chip mdui-chip mdui-color-grey-300 mdui-shadow-0"
+                class="radio-chip mdui-chip mdui-shadow-0"
                 value="enable"
                 ischecked="true"
               >
-                <span class="mdui-chip-icon mdui-color-grey-400">
+                <span class="mdui-chip-icon">
                   <i class="mdui-icon material-icons">radio_button_unchecked</i>
                 </span>
                 <span class="mdui-chip-title">开启</span>
               </div>
               <div
-                class="radio-chip mdui-chip mdui-color-grey-300 mdui-shadow-0"
+                class="radio-chip mdui-chip mdui-shadow-0"
                 value="disable"
                 ischecked="false"
               >
-                <span class="mdui-chip-icon mdui-color-grey-400">
+                <span class="mdui-chip-icon">
                   <i class="mdui-icon material-icons">radio_button_unchecked</i>
                 </span>
                 <span class="mdui-chip-title">关闭</span>
@@ -218,7 +218,10 @@
                 class="mdui-textfield mdui-textfield-floating-label"
                 style="max-width: 128px; margin: 0"
               >
-                <label class="mdui-textfield-label">跳车时间(秒)</label>
+                <label
+                  class="mdui-textfield-label summary-wdiget-preference-title"
+                  >跳车时间(秒)</label
+                >
                 <input
                   id="room_creator_ghost_escape_time"
                   class="mdui-textfield-input"
@@ -230,7 +233,7 @@
             </div>
           </div>
           <div class="mdui-card-content summary-widget-preference mdui-ripple">
-            <label>招募模式</label>
+            <label class="summary-wdiget-preference-title">招募模式</label>
             <div class="mdui-row-md-5">
               <div class="mdui-col">
                 <label class="mdui-checkbox">
@@ -259,14 +262,14 @@
             id="room_creator_boss"
             class="mdui-card-content summary-widget-preference mdui-ripple"
           >
-            <label>选择Boss</label>
+            <label class="summary-wdiget-preference-title">选择Boss</label>
             <div class="radio-group"></div>
           </div>
           <div
             id="room_creator_boss_level"
             class="mdui-card-content summary-widget-preference mdui-ripple"
           >
-            <label>选择难度</label>
+            <label class="summary-wdiget-preference-title">选择难度</label>
             <div class="radio-group"></div>
           </div>
         </div>
@@ -303,24 +306,24 @@
             id="server_selector"
             class="mdui-card-content mdui-ripple summary-widget-preference"
           >
-            <label>选择区服</label>
+            <label class="summary-wdiget-preference-title">选择区服</label>
             <div class="radio-group">
               <div
-                class="radio-chip mdui-chip mdui-color-grey-300 mdui-shadow-0"
+                class="radio-chip mdui-chip mdui-shadow-0"
                 value="cn"
                 ischecked="true"
               >
-                <span class="mdui-chip-icon mdui-color-grey-400">
+                <span class="mdui-chip-icon">
                   <i class="mdui-icon material-icons">radio_button_unchecked</i>
                 </span>
                 <span class="mdui-chip-title">国服</span>
               </div>
               <div
-                class="radio-chip mdui-chip mdui-color-grey-300 mdui-shadow-0"
+                class="radio-chip mdui-chip mdui-shadow-0"
                 value="tw"
                 ischecked="false"
               >
-                <span class="mdui-chip-icon mdui-color-grey-400">
+                <span class="mdui-chip-icon">
                   <i class="mdui-icon material-icons">radio_button_unchecked</i>
                 </span>
                 <span class="mdui-chip-title">台服</span>
