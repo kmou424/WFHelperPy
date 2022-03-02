@@ -38,6 +38,10 @@ data = {
         cfgMan
         .checkoutSection(ConfigSections.SECTION_CUSTOM.get())
         .getString(ConfigOptions.BELL_BOSS_SELECTOR_ADVANCED.get()),
+    ConfigOptions.ROOM_CREATOR_START_FIGHT_MODE.get():
+        cfgMan
+        .checkoutSection(ConfigSections.SECTION_CUSTOM.get())
+        .getString(ConfigOptions.ROOM_CREATOR_START_FIGHT_MODE.get(), default='full'),
     ConfigOptions.ROOM_CREATOR_GHOST_MODE.get():
         cfgMan
         .checkoutSection(ConfigSections.SECTION_CUSTOM.get())
@@ -171,6 +175,11 @@ def saveAllData():
                         request.form[ConfigOptions.BELL_BOSS_SELECTOR_ADVANCED.get()].replace(' ', ''))
         data[ConfigOptions.BELL_BOSS_SELECTOR_ADVANCED.get()] = cfgMan.getString(
             ConfigOptions.BELL_BOSS_SELECTOR_ADVANCED.get())
+        # ROOM_CREATOR_START_FIGHT_MODE
+        cfgMan.setValue(ConfigOptions.ROOM_CREATOR_START_FIGHT_MODE.get(),
+                        request.form[ConfigOptions.ROOM_CREATOR_START_FIGHT_MODE.get()])
+        data[ConfigOptions.ROOM_CREATOR_START_FIGHT_MODE.get()] = cfgMan.getString(
+            ConfigOptions.ROOM_CREATOR_START_FIGHT_MODE.get())
         # ROOM_CREATOR_GHOST_MODE
         cfgMan.setValue(ConfigOptions.ROOM_CREATOR_GHOST_MODE.get(),
                         request.form[ConfigOptions.ROOM_CREATOR_GHOST_MODE.get()])

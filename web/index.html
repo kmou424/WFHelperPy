@@ -187,6 +187,36 @@
             <div class="mdui-card-primary-subtitle">滴滴! 车车来咯!</div>
           </div>
           <div
+            id="room_creator_start_fight_mode"
+            class="mdui-card-content summary-widget-preference mdui-ripple"
+          >
+            <label class="summary-wdiget-preference-title">何时开始挑战</label>
+            <div class="radio-group">
+              <div
+                class="radio-chip mdui-chip mdui-shadow-0"
+                value="full"
+                ischecked="true"
+              >
+                <span class="mdui-chip-icon">
+                  <i class="mdui-icon material-icons">radio_button_unchecked</i>
+                </span>
+                <span class="mdui-chip-title">满员</span>
+              </div>
+              <div
+                class="radio-chip mdui-chip mdui-shadow-0"
+                value="non-full"
+                ischecked="false"
+              >
+                <span class="mdui-chip-icon">
+                  <i class="mdui-icon material-icons">radio_button_unchecked</i>
+                </span>
+                <span class="mdui-chip-title">立即</span>
+              </div>
+            </div>
+            <label>满员: 挑战按钮亮起并且房间人数达到3人后开始</label>
+            <label>立即: 挑战按钮亮起时立即开始</label>
+          </div>
+          <div
             id="room_creator_ghost_mode"
             class="mdui-card-content summary-widget-preference mdui-ripple"
           >

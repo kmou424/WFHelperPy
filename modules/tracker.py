@@ -40,6 +40,10 @@ class TrackerThread(threading.Thread):
         mRoomCreatorRecruitmentMode = cfgMan \
             .selectSection(ConfigSections.SECTION_CUSTOM.get()) \
             .getString(ConfigOptions.RECRUITMENT_MODE.get(), 'true_false_false')
+        mRoomCreatorStartFightMode = cfgMan \
+            .selectSection(ConfigSections.SECTION_CUSTOM.get()) \
+            .getString(ConfigOptions.ROOM_CREATOR_START_FIGHT_MODE.get(), 'full')
+        mIsStartFightWhileFull = (mRoomCreatorStartFightMode == 'full')
         mRoomCreatorGhostMode = cfgMan \
             .checkoutSection(ConfigSections.SECTION_CUSTOM.get()) \
             .getString(ConfigOptions.ROOM_CREATOR_GHOST_MODE.get())
@@ -53,8 +57,8 @@ class TrackerThread(threading.Thread):
             mTrackBell, mTrackBossList,
             # MinBossTemplate: 已选择Boss的最低等级模板图 RoomCreator: 是否开启开车模式
             mMinBossTemplate, mRoomCreator, mRoomCreatorRecruitmentMode,
-            mRoomCreatorGhostMode, mRoomCreatorGhostEscapeTime,
-            # RoomCreatorGhostMode: 灵车模式开关 RoomCreatorGhostEscapeTime: 灵车跳车时间
+            # mIsStartFightWhileFull: 是否满员才开始 RoomCreatorGhostMode: 灵车模式开关 RoomCreatorGhostEscapeTime: 灵车跳车时间
+            mIsStartFightWhileFull, mRoomCreatorGhostMode, mRoomCreatorGhostEscapeTime,
             None)
         self.mEscapeDelay = -1
         self.mStartTime = 0

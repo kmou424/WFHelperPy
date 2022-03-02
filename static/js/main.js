@@ -486,6 +486,9 @@ class UIManager {
           'RoomCreatorGhostMode': ChipRadioGroup.getChecked(
             $('#room_creator_ghost_mode')
           ),
+          'RoomCreatorStartFightMode': ChipRadioGroup.getChecked(
+            $('#room_creator_start_fight_mode')
+          ),
           'RoomCreatorGhostEscapeTime': $(
             '#room_creator_ghost_escape_time'
           ).val(),
@@ -640,6 +643,12 @@ class Updater {
     EditText.update(
       $('#bell_boss_selector_advanced_edittext'),
       result['BellBossSelectorAdvanced']
+    );
+
+    // 何时开始挑战
+    ChipRadioGroup.initRadio(
+      $('#room_creator_start_fight_mode'),
+      result['RoomCreatorStartFightMode']
     );
 
     // 灵车开关

@@ -23,6 +23,8 @@ class ConfigOptions:
     ROOM_CREATOR_SWITCH = _ConfigValue('RoomCreatorSwitch')
     BELL_SELECTOR_MODE = _ConfigValue('BellSelectorMode')
     BELL_BOSS_SELECTOR_ADVANCED = _ConfigValue('BellBossSelectorAdvanced')
+    # full non-full
+    ROOM_CREATOR_START_FIGHT_MODE = _ConfigValue('RoomCreatorStartFightMode')
     ROOM_CREATOR_GHOST_MODE = _ConfigValue('RoomCreatorGhostMode')
     ROOM_CREATOR_GHOST_ESCAPE_TIME = _ConfigValue('RoomCreatorGhostEscapeTime')
     RECRUITMENT_MODE = _ConfigValue('RecruitmentMode')
@@ -67,6 +69,7 @@ class CheckPoint:
     PREPARE_PLAYER1_STATUS = Point(45, 290)
     PREPARE_PLAYER2_STATUS = Point(270, 290)
     PREPARE_PLAYER3_STATUS = Point(508, 290)
+    PREPARE_START_FIGHT = Point(250, 925)
 
 
 class Template:

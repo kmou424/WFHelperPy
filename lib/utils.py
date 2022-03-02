@@ -279,10 +279,11 @@ class _GuestData:
 
 class _RoomCreatorData:
     def __init__(self, mMinBossTemplate: str, mRoomCreatorEnabled: bool, mRoomCreatorRecruitmentMode: str,
-                 mRoomCreatorGhostMode: str, mRoomCreatorGhostEscapeTime: int):
+                 mIsStartFightWhileFull: bool, mRoomCreatorGhostMode: str, mRoomCreatorGhostEscapeTime: int):
         self.MinBossTemplate = mMinBossTemplate
         self.Enabled = mRoomCreatorEnabled
         self.RecruitmentMode = mRoomCreatorRecruitmentMode
+        self.isStartWhileFull = mIsStartFightWhileFull
         self.GhostMode = mRoomCreatorGhostMode
         self.GhostEscapeTime = mRoomCreatorGhostEscapeTime
 
@@ -292,7 +293,7 @@ class Args:
                  mGameServer: str,
                  mTrackBell: bool, mTrackBossList: bool,
                  mMinBossTemplate: str, mRoomCreatorEnabled: bool, mRoomCreatorRecruitmentMode: str,
-                 mRoomCreatorGhostMode: str, mRoomCreatorGhostEscapeTime: int,
+                 mIsStartFightWhileFull: bool, mRoomCreatorGhostMode: str, mRoomCreatorGhostEscapeTime: int,
                  mScreenshot: cv2.cv2):
         self.adb = mAdb
         self.cfgMan = cfgMan
@@ -301,8 +302,8 @@ class Args:
         self.GameServer = mGameServer
         self.GuestData = _GuestData(mTrackBell, mTrackBossList)
         self.RoomCreatorData = _RoomCreatorData(
-            mMinBossTemplate, mRoomCreatorEnabled, mRoomCreatorRecruitmentMode, mRoomCreatorGhostMode,
-            mRoomCreatorGhostEscapeTime
+            mMinBossTemplate, mRoomCreatorEnabled, mRoomCreatorRecruitmentMode,
+            mIsStartFightWhileFull, mRoomCreatorGhostMode, mRoomCreatorGhostEscapeTime
         )
 
         self.Screenshot = mScreenshot

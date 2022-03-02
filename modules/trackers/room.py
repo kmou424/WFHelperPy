@@ -48,11 +48,15 @@ class Room:
             if Checker.checkImageWithTemplate(mArgs, CheckTemplate.FIGHT_PAUSE_BUTTON_RECT):
                 return Task.GO_FIGHT_AS_GUEST
         if task == Task.GO_ROOM_WAITING_FIGHT_OWNER:
-            # 等待其他人准备
+            # 检查界面是否还在准备界面
             if Checker.checkImageWithTemplate(mArgs, CheckTemplate.COMMON_CARD_INFO_ICON):
-                # TODO: 选择两人或三人准备就开始 (目前默认三人)
-                if Room.__preparedPlayerCnt(mArgs.Screenshot) == 3:
-                    mArgs.adb.random_click(CheckTemplate.COMMON_START_FIGHT_BUTTON.getRect(mArgs.GameServer))
+                # 判断"挑战"按钮是否已经亮起
+                if CheckColor.PREPARE_ACTIVE_COLOR \
+                        .isMatch(Rgb.point2rgb(mArgs.Screenshot, CheckPoint.PREPARE_START_FIGHT)):
+                    # 需要满员且已满员
+                    if (mArgs.RoomCreatorData.isStartWhileFull and Room.__preparedPlayerCnt(mArgs.Screenshot) == 3) or \
+                            not mArgs.RoomCreatorData.isStartWhileFull:  # 不需要满员 立即开始
+                        mArgs.adb.random_click(CheckTemplate.COMMON_START_FIGHT_BUTTON.getRect(mArgs.GameServer))
                 return task
             # 判断开战后等待其他人
             if Checker.checkImageWithTemplate(mArgs, CheckTemplate.FIGHT_WAITING_FOR_OTHERS_TEXT_RECT):
