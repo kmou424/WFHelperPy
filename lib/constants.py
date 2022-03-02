@@ -178,6 +178,14 @@ class CheckTemplate:
             'tw': Rect(Point(238, 535), Point(475, 614))
         }
     )
+    # 房间解散弹窗
+    DIALOG_ROOM_DISBAND = Template(
+        'Dialog_room_disband',
+        {
+            'cn': Rect(Point(168, 550), Point(550, 600)),
+            'tw': Rect(Point(168, 550), Point(550, 600))
+        }
+    )
     # 领主加成点数
     DIALOG_INCOME_BUFF = Template(
         'Dialog_income_buff',

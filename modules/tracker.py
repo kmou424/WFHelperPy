@@ -139,6 +139,10 @@ class TrackerThread(threading.Thread):
         if Checker.checkImageWithTemplate(self.mArgs, CheckTemplate.DIALOG_SINGLE_OK):
             print("检测到了意外的弹窗，回到首页")
             self.mArgs.adb.random_click(CheckTemplate.DIALOG_SINGLE_OK.getRect(self.mArgs.GameServer))
+            # 如果房间被自动解散
+            if Checker.checkImageWithTemplate(self.mArgs, CheckTemplate.DIALOG_ROOM_DISBAND):
+                self.mTask = Task.GO_BACK_TO_HOME_FORCE
+                return
             if self.mTask.code < Task.GO_LOGIN.code:
                 self.mTask = Task.GO_BACK_TO_HOME
 
