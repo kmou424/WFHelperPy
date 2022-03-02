@@ -230,4 +230,4 @@ def saveAllData():
 
 
 if __name__ == "__main__":
-    app.run(debug=cfgMan.checkoutSection('Debug').getBoolean('enabled'), host='127.0.0.1', port=5000)
+    app.run(debug=cfgMan.checkoutSection('Debug').getBoolean('enabled'), host='0.0.0.0', port=5000)
