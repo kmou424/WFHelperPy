@@ -2,7 +2,8 @@ import base64
 import os
 from pathlib import Path
 
-from lib.utils import FileCtrl
+from lib.utils import Downloader, Hash
+from lib.file import FileCtrl
 
 DEFAULT_MIRROR = 'https://gitee.com/kmou424/wfhelperpy_template/raw/main/'
 PWD = os.getcwd()
@@ -14,7 +15,7 @@ FileCtrl.checkDir(TEMPLATE_PATH)
 if Path(TEMPLATE_HASH_FILEPATH).exists():
     os.remove(TEMPLATE_HASH_FILEPATH)
 
-FileCtrl.downloadFile(
+Downloader.downloadFile(
     url=DEFAULT_MIRROR + '/' + TEMPLATE_HASH_FILENAME,
     filepath=TEMPLATE_HASH_FILEPATH
 )
@@ -33,11 +34,11 @@ with open(TEMPLATE_HASH_FILEPATH, 'r') as file:
             if not Path(path).exists():
                 print('[Error] File is missing, will download it for now')
                 FileCtrl.checkDir(os.path.dirname(path))
-                FileCtrl.downloadFile(DEFAULT_MIRROR + name_hash[0].replace('\\', '/'), path)
+                Downloader.downloadFile(DEFAULT_MIRROR + name_hash[0].replace('\\', '/'), path)
             else:
-                if name_hash[1] != FileCtrl.getFileHash(path):
+                if name_hash[1] != Hash.getFileHash(path):
                     print('[Warning] This file has an update, will download it for now')
                     os.remove(path)
-                    FileCtrl.downloadFile(DEFAULT_MIRROR + name_hash[0].replace('\\', '/'), path)
+                    Downloader.downloadFile(DEFAULT_MIRROR + name_hash[0].replace('\\', '/'), path)
                 else:
                     print('[Info] OK')

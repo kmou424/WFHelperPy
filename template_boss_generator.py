@@ -5,7 +5,8 @@ import cv2
 
 from lib.config import ConfigManager
 from lib.constants import ConfigOptions, ConfigSections, StatusCode
-from lib.utils import AdbTools, FileCtrl
+from lib.file import FileCtrl
+from lib.utils import AdbTools
 
 
 def printHelp():

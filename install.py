@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 
 from lib.logger import Logger
-from lib.utils import FileCtrl
+from lib.file import FileCtrl
 
 PATH_DELIMITER = FileCtrl.getPathDelimiter()
 

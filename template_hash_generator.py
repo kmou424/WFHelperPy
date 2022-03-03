@@ -2,7 +2,8 @@ import base64
 import os
 from pathlib import Path
 
-from lib.utils import FileCtrl
+from lib.file import FileCtrl
+from lib.utils import Hash
 
 FILE_EXT = ['png', 'json']
 PWD = os.getcwd()
@@ -19,6 +20,6 @@ with open(TEMPLATE_HASH_FILEPATH, mode='w') as file:
             if str(i).endswith(ext):
                 line = "{filename} {hash}".format(
                     filename=str(i).replace(TEMPLATE_PATH + '\\', ''),
-                    hash=FileCtrl.getFileHash(i)
+                    hash=Hash.getFileHash(i)
                 )
                 file.write(base64.b64encode(line.encode('utf-8')).decode('utf-8') + '\n')
