@@ -1,11 +1,7 @@
 import hashlib
 import os
 import random
-import shutil
-import stat
-import sys
 import time
-from pathlib import Path
 from urllib import request
 
 import cv2
@@ -18,16 +14,7 @@ from lib.timer import Timer
 from lib.times import Time
 
 
-class FileCtrl:
-    @staticmethod
-    def checkDir(dirname: str, isCreate=True):
-        isExist = True
-        if not Path(dirname).exists():
-            isExist = False
-            if isCreate:
-                os.makedirs(dirname)
-        return isExist
-
+class Downloader:
     @staticmethod
     def downloadFile(url: str, filepath: str):
         opener = request.build_opener()
@@ -45,50 +32,14 @@ class FileCtrl:
             file.write(content)
         print('Completed')
 
-    @staticmethod
-    def getPathDelimiter():
-        if 'win' in sys.platform:
-            return '\\'
-        elif 'mac' in sys.platform or 'linux' in sys.platform:
-            return '/'
-        else:
-            print("error: Unrecognized platform " + sys.platform + " or not support")
-            exit(1)
 
+class Hash:
     @staticmethod
     def getFileHash(filename: str) -> str:
         with open(filename, 'rb') as f:
             sha1obj = hashlib.sha1()
             sha1obj.update(f.read())
             return sha1obj.hexdigest()
-
-    @staticmethod
-    def getAllFilesList(directory: str) -> list:
-        _files = []
-        file_list = os.listdir(directory)
-        for _i in range(0, len(file_list)):
-            path = os.path.join(directory, file_list[_i])
-            if os.path.isdir(path):
-                _files.extend(FileCtrl.getAllFilesList(path))
-            if os.path.isfile(path):
-                _files.append(path)
-        return _files
-
-    @staticmethod
-    def isExist(filename: str) -> bool:
-        return Path(filename).exists()
-
-    @staticmethod
-    def rmtree(path: str):
-        if 'linux' in sys.platform or 'mac' in sys.platform:
-            os.system('rm -rf {path}'.format(path=path))
-        else:
-            return shutil.rmtree(path, onerror=FileCtrl.__onRmtreeError)
-
-    @staticmethod
-    def __onRmtreeError(func, path, execinfo):
-        os.chmod(path, stat.S_IWRITE)
-        func(path)
 
 
 class Point:
@@ -268,10 +219,15 @@ class AdbTools:
 
 
 class AircvRect:
-    def __init__(self, found: bool, has_info: bool, rect=None):
+    def __init__(self, found: bool, has_info: bool, allow_enter: bool, rect=None):
+        self.text = None
         self.found = found
         self.has_info = has_info
+        self.allow_enter = allow_enter
         self.rect = rect
+
+    def setImageText(self, text: str):
+        self.text = text
 
 
 class _GuestData:
