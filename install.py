@@ -39,28 +39,6 @@ def createToolsVenv():
     os.system('python -m venv tools')
 
 
-def generateRunScript():
-    if 'win' in sys.platform:
-        with open('run.bat', 'w') as run_bat:
-            run_bat.writelines('@title WFHelperPy\n')
-            run_bat.writelines('{python_path} wfhelper.py\n'
-                               .format(python_path=VENV_PYTHON_PATH.replace('/', '\\')))
-    if 'linux' in sys.platform or 'mac' in sys.platform:
-        with open('run.sh', 'w') as run_sh:
-            run_sh.writelines('#!/bin/bash\n')
-            run_sh.writelines('{python_path} wfhelper.py\n'
-                              .format(python_path=VENV_PYTHON_PATH))
-    Logger.displayLog("生成新的启动脚本", quit_code=0)
-
-
-def removeOldRunScript():
-    if Path('run.bat').exists():
-        os.remove('run.bat')
-    if Path('run.sh').exists():
-        os.remove('run.sh')
-    Logger.displayLog("清除旧的启动脚本")
-
-
 def installRequirements():
     Logger.displayLog("检查并安装依赖")
     os.system('{pip_path} install wheel'.format(pip_path=VENV_PIP_PATH.replace('/', PATH_DELIMITER)))
@@ -70,10 +48,8 @@ def installRequirements():
             os.system('{pip_path} install {whl}'.format(pip_path=VENV_PIP_PATH.replace('/', PATH_DELIMITER), whl=whl))
     _ret = os.system(
         '{pip_path} install -r requirements.txt'.format(pip_path=VENV_PIP_PATH.replace('/', PATH_DELIMITER)))
-    removeOldRunScript()
     if _ret == 0:
         Logger.displayLog("安装依赖成功")
-        generateRunScript()
     else:
         Logger.displayLog("安装依赖失败", Logger.LOG_LEVEL_ERROR, quit_code=_ret)
 

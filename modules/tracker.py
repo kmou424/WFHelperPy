@@ -20,11 +20,11 @@ from modules.trackers.room import Room
 
 
 class TrackerThread(threading.Thread):
-    def __init__(self, adb):
+    def __init__(self, adb, config_file):
         threading.Thread.__init__(self)
         self.mTask = Task.NO_TASK
         self.mStatus = StatusCode.NO_ERROR
-        cfgMan = ConfigManager('config.ini', writable=False)
+        cfgMan = ConfigManager(config_file, writable=False)
         mGameServer = cfgMan \
             .selectSection(ConfigSections.SECTION_SETTINGS.get()) \
             .getString(ConfigOptions.GAME_SERVER.get(), default='cn')
@@ -155,9 +155,10 @@ class TrackerThread(threading.Thread):
 
 
 class Tracker:
-    def __init__(self):
+    def __init__(self, config_file):
         self.adb_tools = None
-        self.trackerThread = TrackerThread(None)
+        self.trackerThread = TrackerThread(None, config_file)
+        self.__config_file = config_file
 
     def run(self, address: str):
         self.adb_tools = AdbTools(address)
@@ -171,7 +172,7 @@ class Tracker:
             return ResultCode.START_FAILED
         # 开始运行线程
         if not self.running():
-            self.trackerThread = TrackerThread(adb=self.adb_tools)
+            self.trackerThread = TrackerThread(self.adb_tools, self.__config_file)
             self.trackerThread.start()
         return ResultCode.START_SUCCEED
 

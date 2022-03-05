@@ -1,4 +1,5 @@
 import configparser as ConfigParser
+import os.path
 from pathlib import Path
 
 
@@ -18,6 +19,8 @@ class ConfigManager:
         self.__initConfigParser()
 
     def __initConfigParser(self):
+        if not Path(os.path.dirname(self.filename)).exists():
+            os.makedirs(os.path.dirname(self.filename))
         if not Path(self.filename).exists():
             self.config_parser.write(open(self.filename, 'w', encoding='utf-8'))
         else:

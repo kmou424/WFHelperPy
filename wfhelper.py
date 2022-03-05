@@ -1,15 +1,26 @@
+import os
+import sys
+
 import cv2
 from flask import Flask, jsonify, render_template, request
 
 from lib.config import ConfigManager
 from lib.constants import ConfigOptions, ConfigSections, ConfigValues
+from lib.logger import Logger
 from lib.times import Time
 from modules.tracker import Tracker
 from lib.resource import ResourceJson
 
+if len(sys.argv) == 3:
+    if not 0 <= int(sys.argv[1]) <= 65536:
+        Logger.displayLog("端口号无效", Logger.LOG_LEVEL_ERROR, -1)
+else:
+    print("Usage: {filename} [port] [config_path]"
+          .format(filename=os.path.basename(sys.argv[0])))
+
 app = Flask(__name__, template_folder='web')
-cfgMan = ConfigManager('config.ini', writable=True)
-tracker = Tracker()
+cfgMan = ConfigManager(sys.argv[2], writable=True)
+tracker = Tracker(sys.argv[2])
 result = 0
 data = {
     # Main
@@ -248,4 +259,4 @@ def saveAllData():
 
 
 if __name__ == "__main__":
-    app.run(debug=cfgMan.checkoutSection('Debug').getBoolean('enabled'), host='0.0.0.0', port=5000)
+        app.run(debug=cfgMan.checkoutSection('Debug').getBoolean('enabled'), host='0.0.0.0', port=int(sys.argv[1]))

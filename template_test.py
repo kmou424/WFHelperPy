@@ -12,24 +12,22 @@ from lib.utils import AdbTools
 
 
 def printHelp():
-    print("{filename} [release_game_version] [template_img_name]"
+    print("{filename} [adb_serial] [release_game_version] [template_img_name]"
           .format(filename=os.path.basename(sys.argv[0])))
 
 
 if __name__ == "__main__":
-    cfgMan = ConfigManager('config.ini', writable=True)
-    address = cfgMan.selectSection(ConfigSections.SECTION_SETTINGS.get())\
-        .getString(ConfigOptions.DEVICE_ADB_SERIAL.get())
-    adb = AdbTools(address)
-    if not adb.check():
-        print("connect failed")
-        exit(StatusCode.ADB_CONNECT_FAILED)
-    if not adb.initZoom():
-        print("不支持的分辨率")
-        exit(StatusCode.UNSUPPORTED_RESOLUTION)
-    if len(sys.argv) == 3:
-        release_game_version = sys.argv[1]
-        template_img_name = sys.argv[2]
+    if len(sys.argv) == 4:
+        address = sys.argv[1]
+        adb = AdbTools(address)
+        if not adb.check():
+            print("connect failed")
+            exit(StatusCode.ADB_CONNECT_FAILED)
+        if not adb.initZoom():
+            print("不支持的分辨率")
+            exit(StatusCode.UNSUPPORTED_RESOLUTION)
+        release_game_version = sys.argv[2]
+        template_img_name = sys.argv[3]
         save_file = "template/{rgv}/{tin}.png"\
             .format(rgv=release_game_version, tin=template_img_name)
         start_ss = time.perf_counter()
