@@ -110,6 +110,9 @@ class TrackerThread(threading.Thread):
             self.mTask = Task.NO_TASK
 
     def __unexpected_dialog(self):
+        # TODO: 增加可选择使用或者不使用领主加成点数的选项 (当前默认选是)
+        if Checker.checkImageWithTemplate(self.mArgs, CheckTemplate.DIALOG_INCOME_BUFF):
+            self.mArgs.adb.random_click(CheckTemplate.DIALOG_DOUBLE_OK.getRect(self.mArgs.GameServer))
         # 检测日期改变对话框
         if Checker.checkImageWithTemplate(self.mArgs, CheckTemplate.DIALOG_DATE_CHANGED):
             self.mArgs.adb.random_click(CheckTemplate.DIALOG_SINGLE_OK.getRect(self.mArgs.GameServer))

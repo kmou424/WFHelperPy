@@ -16,10 +16,6 @@ class Room:
                 return Task.GO_ROOM_PREPARE_AS_GUEST
         # 房主模式 进房
         if task == Task.GO_ROOM_AS_OWNER:
-            # TODO: 增加可选择使用或者不使用领主加成点数的选项 (当前默认选否)
-            if Checker.checkImageWithTemplate(mArgs, CheckTemplate.DIALOG_INCOME_BUFF):
-                mArgs.adb.random_click(CheckTemplate.DIALOG_DOUBLE_CANCEL.getRect(mArgs.GameServer))
-                return task
             if Checker.checkImageWithTemplate(mArgs, CheckTemplate.COMMON_CARD_INFO_ICON):
                 if Checker.checkImageWithTemplate(mArgs, CheckTemplate.RECRUITMENT_BUTTON):
                     mArgs.adb.random_click(CheckTemplate.RECRUITMENT_BUTTON.getRect(mArgs.GameServer))
