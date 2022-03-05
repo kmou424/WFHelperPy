@@ -1,8 +1,9 @@
 import cv2
 
+from lib.base import Rgb
 from lib.constants import CheckColor, CheckPoint, CheckTemplate, Task, CheckRect
 from lib.resource import Resource
-from lib.utils import Rgb, Args
+from lib.utils import Args
 from modules.checker import Checker
 
 

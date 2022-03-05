@@ -1,5 +1,5 @@
+from lib.base import Rect, Point, Color, Rgb
 from lib.logger import Logger
-from lib.utils import Color, Rgb, Point, Rect
 
 
 class _ConfigValue:
@@ -19,10 +19,12 @@ class ConfigSections:
 class ConfigOptions:
     GAMING_MODE_MAIN = _ConfigValue('GamingModeMain')
     TRACK_BELL_SWITCH = _ConfigValue('TrackBellSwitch')
-    TRACK_BOSS_LIST_SWITCH = _ConfigValue('TrackBossListSwitch')
+    TRACK_FOLLOW_SWITCH = _ConfigValue('TrackFollowSwitch')
     ROOM_CREATOR_SWITCH = _ConfigValue('RoomCreatorSwitch')
     BELL_SELECTOR_MODE = _ConfigValue('BellSelectorMode')
     BELL_BOSS_SELECTOR_ADVANCED = _ConfigValue('BellBossSelectorAdvanced')
+    FOLLOW_FRIEND_SELECT = _ConfigValue('FollowFriendSelect')
+    FOLLOW_FRIEND_SELECT_NAME = _ConfigValue('FollowFriendSelectName')
     # full non-full
     ROOM_CREATOR_START_FIGHT_MODE = _ConfigValue('RoomCreatorStartFightMode')
     ROOM_CREATOR_GHOST_MODE = _ConfigValue('RoomCreatorGhostMode')
@@ -254,6 +256,13 @@ class CheckTemplate:
             'tw': Rect(Point(632, 285), Point(682, 332))
         }
     )
+    BOSS_LIST_REFRESH_UNAVAILABLE_BUTTON = Template(
+        'Boss_list_refresh_unavailable_button',
+        {
+            'cn': Rect(Point(632, 285), Point(682, 332)),
+            'tw': Rect(Point(632, 285), Point(682, 332))
+        }
+    )
     BOSS_INFO_EXCHANGE_BUTTON = Template(
         'Boss_info_exchange_button',
         {
@@ -400,6 +409,13 @@ class CheckTemplate:
     )
 
 
+class Locate:
+    BOSS_LIST_CARD_TITLE_ROOM_SUFFIX = {
+        'cn': '的房间',
+        'tw': '的房間'
+    }
+
+
 class Const:
     # Boss列表头图底部坐标Y
     BOSS_LIST_HEADER_BOTTOM_Y = 372
@@ -411,6 +427,16 @@ class Const:
     BOSS_LIST_CARD_RIGHT_X = 695
     # "i"图标左侧(防止点到"i"图标)
     BOSS_LIST_CARD_RIGHT_X_NO_INFO = 648
+    # "i"图标到卡片顶部距离
+    BOSS_LIST_CARD_INFO_MARGIN_TOP = 45
+    # "i"图标到卡片底部距离
+    BOSS_LIST_CARD_INFO_MARGIN_BOTTOM = 44
+    # "i"图标右边的房间状态颜色图案间距
+    BOSS_LIST_CARD_INFO_MARGIN_LEFT_ROOM_STATUS = 48
+    # 卡片文字内容 右边坐标 X
+    BOSS_LIST_CARD_TEXT_RIGHT = 540
+    # 卡片文字内容 左边坐标 X
+    BOSS_LIST_CARD_TEXT_LEFT = 200
 
 
 class ResultCode:
@@ -461,6 +487,7 @@ class Task:
     GO_CREATOR_CHECK_BOSS_LIST = Status(402, "寻找目标Boss")
     GO_CREATOR_CHECK_BOSS_LEVEL = Status(403, "选择目标难度")
     GO_CREATOR_CREATE_ROOM = Status(404, "创建目标Boss房间")
+    GO_FOLLOW_CHECK_BOSS_LIST = Status(501, "寻找房间")
     GO_LOGIN = Status(901, "前往登录")
     GO_CONTINUE_AFTER_LOGIN = Status(902, "已登录，准备开始检测当前界面")
     GO_CHECK_INTERFACE = Status(903, "检测当前界面")

@@ -7,14 +7,13 @@ from modules.checker import Checker
 class Bell:
     @staticmethod
     def track(mArgs: Args, task: Task):
-        if task == Task.NO_TASK:
-            if Checker.checkImageWithTemplate(mArgs, CheckTemplate.HOME_BELL_ACTIVE, accuracy=0.65):
-                mArgs.adb.random_click(CheckTemplate.HOME_BELL_ACTIVE.getRect(mArgs.GameServer))
-                return Task.GO_BELL_CLICKED
+        if Checker.checkImageWithTemplate(mArgs, CheckTemplate.HOME_BELL_ACTIVE, accuracy=0.65):
+            mArgs.adb.random_click(CheckTemplate.HOME_BELL_ACTIVE.getRect(mArgs.GameServer))
+            return Task.GO_BELL_CLICKED
         # 点击铃铛后
         if task == Task.GO_BELL_CLICKED:
             if Checker.checkImageWithTemplate(mArgs, CheckTemplate.BELL_DIALOG_TITLE_RECT):
-                bell_boss_list = Resource.getBellBossList(mArgs)
+                bell_boss_list = Resource.getBellBossList(mArgs.cfgMan)
                 if bell_boss_list is None:
                     mArgs.adb.random_click(CheckTemplate.BELL_DIALOG_JOIN_RECT.getRect(mArgs.GameServer))
                     return Task.GO_ROOM_AS_GUEST

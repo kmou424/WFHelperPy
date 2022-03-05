@@ -2,17 +2,19 @@ import threading
 import time
 
 import cv2
+from cnocr import CnOcr
 
 from lib.config import ConfigManager
 from lib.constants import CheckColor, CheckPoint, CheckTemplate, \
     ConfigOptions, ConfigSections, ResultCode, Task, StatusCode, CheckRect, ConfigValues
 from lib.resource import Resource
 from lib.timer import Timer
-from lib.utils import AdbTools, Args
+from lib.utils import AdbTools, Args, GuestData, RoomCreatorData
 from modules.checker import Checker
 from modules.trackers.bell import Bell
 from modules.trackers.creator import Creator
 from modules.trackers.fight import Fight
+from modules.trackers.follow import Follow
 from modules.trackers.login import Login
 from modules.trackers.room import Room
 
@@ -20,59 +22,36 @@ from modules.trackers.room import Room
 class TrackerThread(threading.Thread):
     def __init__(self, adb):
         threading.Thread.__init__(self)
-        self.running = False
         self.mTask = Task.NO_TASK
         self.mStatus = StatusCode.NO_ERROR
         cfgMan = ConfigManager('config.ini', writable=False)
         mGameServer = cfgMan \
             .selectSection(ConfigSections.SECTION_SETTINGS.get()) \
             .getString(ConfigOptions.GAME_SERVER.get(), default='cn')
-        mTrackBell = cfgMan \
-            .selectSection(ConfigSections.SECTION_MAIN.get()) \
-            .getBoolean(ConfigOptions.TRACK_BELL_SWITCH.get())
-        mTrackBossList = cfgMan \
-            .selectSection(ConfigSections.SECTION_MAIN.get()) \
-            .getBoolean(ConfigOptions.TRACK_BOSS_LIST_SWITCH.get())
-        mMinBossTemplate = Resource.getMinBossTemplate(cfgMan, mGameServer)
-        mRoomCreator = cfgMan \
-            .selectSection(ConfigSections.SECTION_MAIN.get()) \
-            .getBoolean(ConfigOptions.ROOM_CREATOR_SWITCH.get())
-        mRoomCreatorRecruitmentMode = cfgMan \
-            .selectSection(ConfigSections.SECTION_CUSTOM.get()) \
-            .getString(ConfigOptions.RECRUITMENT_MODE.get(), 'true_false_false')
-        mRoomCreatorStartFightMode = cfgMan \
-            .selectSection(ConfigSections.SECTION_CUSTOM.get()) \
-            .getString(ConfigOptions.ROOM_CREATOR_START_FIGHT_MODE.get(), 'full')
-        mIsStartFightWhileFull = (mRoomCreatorStartFightMode == 'full')
-        mRoomCreatorGhostMode = cfgMan \
-            .checkoutSection(ConfigSections.SECTION_CUSTOM.get()) \
-            .getString(ConfigOptions.ROOM_CREATOR_GHOST_MODE.get())
-        mRoomCreatorGhostEscapeTime = cfgMan \
-            .checkoutSection(ConfigSections.SECTION_CUSTOM.get()) \
-            .getInt(ConfigOptions.ROOM_CREATOR_GHOST_ESCAPE_TIME.get())
-        timer = Timer()
+        mOcr = CnOcr(root='prebuilt/cnocr_model')
         self.mArgs = Args(
-            adb, cfgMan, timer, mGameServer,
-            # TrackBell: 监听铃铛开关 TrackBossList: 监听好友车
-            mTrackBell, mTrackBossList,
-            # MinBossTemplate: 已选择Boss的最低等级模板图 RoomCreator: 是否开启开车模式
-            mMinBossTemplate, mRoomCreator, mRoomCreatorRecruitmentMode,
-            # mIsStartFightWhileFull: 是否满员才开始 RoomCreatorGhostMode: 灵车模式开关 RoomCreatorGhostEscapeTime: 灵车跳车时间
-            mIsStartFightWhileFull, mRoomCreatorGhostMode, mRoomCreatorGhostEscapeTime,
-            None)
+            isRunning=False,
+            mAdb=adb,
+            cfgMan=cfgMan,
+            timer=Timer(),
+            mOcr=mOcr,
+            mGameServer=mGameServer,
+            mScreenshot=None,
+            mGuestData=GuestData(cfgMan),
+            mRoomCreatorData=RoomCreatorData(cfgMan, mGameServer))
         self.mEscapeDelay = -1
         self.mStartTime = 0
 
     def run(self):
         threading.Thread.run(self)
-        self.running = True
+        self.mArgs.running = True
         self.mStatus = StatusCode.NO_ERROR
         self.mArgs.timer.reset()
         while True:
             # 检查adb
             if not self.mArgs.adb.check():
                 print("ADB 连接错误, 运行中断")
-                self.running = False
+                self.mArgs.running = False
                 self.mTask = Task.NO_TASK
                 self.mStatus = StatusCode.ADB_CONNECT_INTERRUPT
                 break
@@ -95,16 +74,19 @@ class TrackerThread(threading.Thread):
             # 意外主页事件检测
             self.__check_is_home()
             # 执行完本次任务再停止
-            if not self.running and self.mTask == Task.NO_TASK:
+            if not self.mArgs.running and self.mTask == Task.NO_TASK:
                 print('停止运行')
                 break
             # 登录类 追踪器
             self.mTask = Login.track(self.mArgs, self.mTask)
-            if Resource.getGamingModeMain(self.mArgs) == ConfigValues.GAMING_MODE_MAIN_GUEST:
+            if Resource.getGamingModeMain(self.mArgs.cfgMan) == ConfigValues.GAMING_MODE_MAIN_GUEST:
                 # 铃铛类 追踪器
                 if self.mArgs.GuestData.TrackBellSwitch:
                     self.mTask = Bell.track(self.mArgs, self.mTask)
-            if Resource.getGamingModeMain(self.mArgs) == ConfigValues.GAMING_MODE_MAIN_OWNER:
+                # 好友类 追踪器
+                if self.mArgs.GuestData.TrackFollowSWitch:
+                    self.mTask = Follow.track(self.mArgs, self.mTask)
+            if Resource.getGamingModeMain(self.mArgs.cfgMan) == ConfigValues.GAMING_MODE_MAIN_OWNER:
                 # 开车类 追踪器
                 if self.mArgs.RoomCreatorData.Enabled:
                     self.mTask = Creator.track(self.mArgs, self.mTask)
@@ -194,7 +176,7 @@ class Tracker:
         return ResultCode.START_SUCCEED
 
     def stop(self):
-        self.trackerThread.running = False
+        self.trackerThread.mArgs.running = False
         if self.running():
             return ResultCode.WAITING_TASK
         else:
@@ -203,7 +185,7 @@ class Tracker:
     def running(self):
         if self.trackerThread is None:
             return False
-        if not self.trackerThread.running and self.trackerThread.mTask == Task.NO_TASK:
+        if not self.trackerThread.mArgs.running and self.trackerThread.mTask == Task.NO_TASK:
             return False
         else:
             return True

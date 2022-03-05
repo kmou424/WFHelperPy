@@ -1,8 +1,9 @@
 import time
 
+from lib.base import Point
 from lib.constants import Task, CheckTemplate, Const, ConfigSections, ConfigOptions
 from lib.resource import Resource
-from lib.utils import Args, Random, Point
+from lib.utils import Random, Args
 from modules.checker import Checker
 
 

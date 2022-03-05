@@ -472,10 +472,22 @@ class UIManager {
     Log.o('SaveButtonClickListener');
     $('#toolbar_save_btn').click(function () {
       if (!server_status.getRunning()) {
+        if (
+          $('#follow_friend_select_name').val() == null ||
+          $('#follow_friend_select_name').val() == undefined ||
+          $('#follow_friend_select_name').val() == ''
+        ) {
+          ChipRadioGroup.check(
+            ChipRadioGroup.findChipByValue(
+              $('#follow_friend_select'),
+              'disable'
+            )
+          );
+        }
         var mData = {
           'GamingModeMain': ChipRadioGroup.getChecked($('#gaming_mode_main')),
           'TrackBellSwitch': $('#track_bell_switch').prop('checked'),
-          'TrackBossListSwitch': $('#track_boss_list_switch').prop('checked'),
+          'TrackFollowSwitch': $('#track_follow_switch').prop('checked'),
           'RoomCreatorSwitch': $('#room_creator_switch').prop('checked'),
           'BellSelectorMode': ChipRadioGroup.getChecked(
             $('#bell_selector_mode')
@@ -483,6 +495,10 @@ class UIManager {
           'BellBossSelectorAdvanced': $(
             '#bell_boss_selector_advanced_edittext'
           ).val(),
+          'FollowFriendSelect': ChipRadioGroup.getChecked(
+            $('#follow_friend_select')
+          ),
+          'FollowFriendSelectName': $('#follow_friend_select_name').val(),
           'RoomCreatorGhostMode': ChipRadioGroup.getChecked(
             $('#room_creator_ghost_mode')
           ),
@@ -623,8 +639,8 @@ class Updater {
 
     // 关注列表进房开关
     SwitchPreference.update(
-      $('#track_boss_list_switch'),
-      result['TrackBossListSwitch']
+      $('#track_follow_switch'),
+      result['TrackFollowSwitch']
     );
 
     // 开车开关
@@ -643,6 +659,18 @@ class Updater {
     EditText.update(
       $('#bell_boss_selector_advanced_edittext'),
       result['BellBossSelectorAdvanced']
+    );
+
+    // 指定坐车好友昵称开关
+    ChipRadioGroup.initRadio(
+      $('#follow_friend_select'),
+      result['FollowFriendSelect']
+    );
+
+    // 指定坐车好友昵称开关
+    EditText.update(
+      $('#follow_friend_select_name'),
+      result['FollowFriendSelectName']
     );
 
     // 何时开始挑战

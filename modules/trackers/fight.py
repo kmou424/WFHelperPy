@@ -15,7 +15,7 @@ class Fight:
         # 前往战斗
         if task == Task.GO_FIGHT:
             # 判定灵车模式并跳车
-            if Resource.getGamingModeMain(mArgs) == ConfigValues.GAMING_MODE_MAIN_OWNER and \
+            if Resource.getGamingModeMain(mArgs.cfgMan) == ConfigValues.GAMING_MODE_MAIN_OWNER and \
                     mArgs.RoomCreatorData.Enabled and \
                     mArgs.RoomCreatorData.GhostMode == ConfigValues.COMMON_ENABLE.get() and \
                     mArgs.RoomCreatorData.GhostEscapeTime >= 0:
@@ -54,6 +54,9 @@ class Fight:
             else:
                 mArgs.adb.random_click(CheckTemplate.RESULT_BOTTOM_BLANK_SPACE.getRect(mArgs.GameServer))
         if task == Task.GO_FIGHT_ESCAPE:
+            # 还没跳车就打完了
+            if Checker.hasBottomBar(mArgs.Screenshot):
+                return Task.GO_BACK_TO_HOME_FORCE
             # 检查确认放弃对话框并点击确认
             # 优先级最高
             if Checker.checkImageWithTemplate(mArgs, CheckTemplate.FIGHT_PAUSE_UI_ESCAPE_DIALOG):

@@ -21,10 +21,10 @@ data = {
         cfgMan
         .checkoutSection(ConfigSections.SECTION_MAIN.get())
         .getBoolean(ConfigOptions.TRACK_BELL_SWITCH.get()),
-    ConfigOptions.TRACK_BOSS_LIST_SWITCH.get():
+    ConfigOptions.TRACK_FOLLOW_SWITCH.get():
         cfgMan
         .checkoutSection(ConfigSections.SECTION_MAIN.get())
-        .getBoolean(ConfigOptions.TRACK_BOSS_LIST_SWITCH.get()),
+        .getBoolean(ConfigOptions.TRACK_FOLLOW_SWITCH.get()),
     ConfigOptions.ROOM_CREATOR_SWITCH.get():
         cfgMan
         .checkoutSection(ConfigSections.SECTION_MAIN.get())
@@ -38,6 +38,14 @@ data = {
         cfgMan
         .checkoutSection(ConfigSections.SECTION_CUSTOM.get())
         .getString(ConfigOptions.BELL_BOSS_SELECTOR_ADVANCED.get()),
+    ConfigOptions.FOLLOW_FRIEND_SELECT.get():
+        cfgMan
+        .checkoutSection(ConfigSections.SECTION_CUSTOM.get())
+        .getString(ConfigOptions.FOLLOW_FRIEND_SELECT.get(), ConfigValues.COMMON_DISABLE.get()),
+    ConfigOptions.FOLLOW_FRIEND_SELECT_NAME.get():
+        cfgMan
+        .checkoutSection(ConfigSections.SECTION_CUSTOM.get())
+        .getString(ConfigOptions.FOLLOW_FRIEND_SELECT_NAME.get(), ''),
     ConfigOptions.ROOM_CREATOR_START_FIGHT_MODE.get():
         cfgMan
         .checkoutSection(ConfigSections.SECTION_CUSTOM.get())
@@ -154,10 +162,10 @@ def saveAllData():
                         request.form[ConfigOptions.TRACK_BELL_SWITCH.get()])
         data[ConfigOptions.TRACK_BELL_SWITCH.get()] = cfgMan.getBoolean(ConfigOptions.TRACK_BELL_SWITCH.get())
         # TRACK_BOSS_LIST_SWITCH
-        cfgMan.setValue(ConfigOptions.TRACK_BOSS_LIST_SWITCH.get(),
-                        request.form[ConfigOptions.TRACK_BOSS_LIST_SWITCH.get()])
-        data[ConfigOptions.TRACK_BOSS_LIST_SWITCH.get()] = cfgMan \
-            .getBoolean(ConfigOptions.TRACK_BOSS_LIST_SWITCH.get())
+        cfgMan.setValue(ConfigOptions.TRACK_FOLLOW_SWITCH.get(),
+                        request.form[ConfigOptions.TRACK_FOLLOW_SWITCH.get()])
+        data[ConfigOptions.TRACK_FOLLOW_SWITCH.get()] = cfgMan \
+            .getBoolean(ConfigOptions.TRACK_FOLLOW_SWITCH.get())
         # ROOM_CREATOR_SWITCH
         cfgMan.setValue(ConfigOptions.ROOM_CREATOR_SWITCH.get(),
                         request.form[ConfigOptions.ROOM_CREATOR_SWITCH.get()])
@@ -175,6 +183,16 @@ def saveAllData():
                         request.form[ConfigOptions.BELL_BOSS_SELECTOR_ADVANCED.get()].replace(' ', ''))
         data[ConfigOptions.BELL_BOSS_SELECTOR_ADVANCED.get()] = cfgMan.getString(
             ConfigOptions.BELL_BOSS_SELECTOR_ADVANCED.get())
+        # FOLLOW_FRIEND_SELECT
+        cfgMan.setValue(ConfigOptions.FOLLOW_FRIEND_SELECT.get(),
+                        request.form[ConfigOptions.FOLLOW_FRIEND_SELECT.get()])
+        data[ConfigOptions.FOLLOW_FRIEND_SELECT.get()] = cfgMan.getString(
+            ConfigOptions.FOLLOW_FRIEND_SELECT.get())
+        # FOLLOW_FRIEND_SELECT_NAME
+        cfgMan.setValue(ConfigOptions.FOLLOW_FRIEND_SELECT_NAME.get(),
+                        request.form[ConfigOptions.FOLLOW_FRIEND_SELECT_NAME.get()])
+        data[ConfigOptions.FOLLOW_FRIEND_SELECT_NAME.get()] = cfgMan.getString(
+            ConfigOptions.FOLLOW_FRIEND_SELECT_NAME.get())
         # ROOM_CREATOR_START_FIGHT_MODE
         cfgMan.setValue(ConfigOptions.ROOM_CREATOR_START_FIGHT_MODE.get(),
                         request.form[ConfigOptions.ROOM_CREATOR_START_FIGHT_MODE.get()])

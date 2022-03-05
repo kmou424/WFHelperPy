@@ -108,7 +108,7 @@
           <div class="mdui-card-content switch-preference mdui-ripple">
             <a>关注/互关车</a>
             <label class="mdui-switch">
-              <input id="track_boss_list_switch" type="checkbox" />
+              <input id="track_follow_switch" type="checkbox" />
               <i class="mdui-switch-icon"></i>
             </label>
           </div>
@@ -177,6 +177,62 @@
             </div>
           </div>
           <div class="mdui-card-content mdui-ripple"></div>
+        </div>
+        <div id="follow_options" class="mdui-card content-card corner-8px">
+          <div class="mdui-card-primary">
+            <div class="mdui-card-primary-title">关注/互关 - 扩展</div>
+            <div class="mdui-card-primary-subtitle">体力蝗虫</div>
+          </div>
+          <div
+            id="follow_friend_select"
+            class="mdui-card-content summary-widget-preference mdui-ripple"
+          >
+            <label class="summary-wdiget-preference-title"
+              >只坐指定好友的车</label
+            >
+            <div class="radio-group">
+              <div
+                class="radio-chip mdui-chip mdui-shadow-0"
+                value="enable"
+                ischecked="true"
+              >
+                <span class="mdui-chip-icon">
+                  <i class="mdui-icon material-icons">radio_button_unchecked</i>
+                </span>
+                <span class="mdui-chip-title">开启</span>
+              </div>
+              <div
+                class="radio-chip mdui-chip mdui-shadow-0"
+                value="disable"
+                ischecked="false"
+              >
+                <span class="mdui-chip-icon">
+                  <i class="mdui-icon material-icons">radio_button_unchecked</i>
+                </span>
+                <span class="mdui-chip-title">关闭</span>
+              </div>
+            </div>
+            <div>
+              <div
+                class="mdui-textfield mdui-textfield-floating-label"
+                style="max-width: 228px; margin: 0"
+              >
+                <label
+                  class="mdui-textfield-label summary-wdiget-preference-title"
+                  >好友昵称</label
+                >
+                <input
+                  id="follow_friend_select_name"
+                  class="mdui-textfield-input"
+                  type="text"
+                  value=" "
+                />
+                <div class="mdui-textfield-helper">
+                  留空则自动关闭此项设定(会自动去除空格)
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div
           id="room_creator_options"
