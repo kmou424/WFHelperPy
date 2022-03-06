@@ -481,6 +481,7 @@ class Task:
     GO_FIGHT = Status(203, "战斗中")
     GO_FIGHT_ESCAPE = Status(204, "退出房间(跳车/灵车)")
     GO_FIGHT_RESULT = Status(205, "战斗结束-结算")
+    GO_FIGHT_END_FAST_JUMP = Status(206, "战后快速跳转")
     GO_BELL_CLICKED = Status(301, "检测到铃铛")
     GO_BELL_JOIN = Status(302, "加入铃铛")
     GO_CREATOR_GET_TARGET_BOSS_INFO = Status(401, "获取目标Boss信息")
