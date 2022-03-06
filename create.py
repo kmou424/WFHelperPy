@@ -27,23 +27,23 @@ def generateRunScript(name):
     if 'win' in sys.platform:
         with open(RUNNER_DIR + WIN_SCRIPT_NAME, 'w') as run_bat:
             run_bat.writelines('@title {name}\n'.format(name=name))
-            run_bat.writelines('cd ..\n')
             run_bat.writelines('{python_path} wfhelper.py {port} {config_path}\n'
                                .format(
                                     python_path=VENV_PYTHON_PATH.replace('/', '\\'),
                                     port=sys.argv[1],
                                     config_path='configs/{name}.ini'.format(name=name)
                                 ))
+            Logger.displayLog("会话已创建，请执行 .\\{path} 来启动会话".format(path=RUNNER_DIR.replace('/', '\\') + WIN_SCRIPT_NAME), Logger.LOG_LEVEL_INFO)
     if 'linux' in sys.platform or 'mac' in sys.platform:
         with open(RUNNER_DIR + LINUX_SCRIPT_NAME, 'w') as run_sh:
             run_sh.writelines('#!/bin/bash\n')
-            run_sh.writelines('cd ..\n')
             run_sh.writelines('{python_path} wfhelper.py {port} {config_path}\n'
                               .format(
                                python_path=VENV_PYTHON_PATH,
                                port=sys.argv[1],
                                config_path='configs/{name}.ini'.format(name=name)
                                 ))
+            Logger.displayLog("会话已创建，请执行 ./{path} 来启动会话".format(path=RUNNER_DIR + LINUX_SCRIPT_NAME), Logger.LOG_LEVEL_INFO)
 
 
 def removeOldRunScript(name):
