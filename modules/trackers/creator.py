@@ -2,6 +2,7 @@ import time
 
 from lib.base import Point
 from lib.constants import Task, CheckTemplate, Const, ConfigSections, ConfigOptions
+from lib.logger import Logger
 from lib.resource import Resource
 from lib.utils import Random, Args
 from modules.checker import Checker
@@ -18,6 +19,8 @@ class Creator:
                 mArgs.adb.random_click(CheckTemplate.HOME_BOSS_LIST_BUTTON.getRect(mArgs.GameServer))
                 # 等待过渡动画
                 time.sleep(0.8)
+                # 重置定时器
+                mArgs.timer.reset()
                 return Task.GO_CREATOR_CHECK_BOSS_LIST
         if mTask == Task.GO_CREATOR_CHECK_BOSS_LIST:
             # 检查检索中对话框 (应对较慢网络)
@@ -27,6 +30,14 @@ class Creator:
                 return mTask
             # 检查是否在Boss列表界面
             if not Checker.checkImageWithTemplate(mArgs, CheckTemplate.BOSS_LIST_REFRESH_BUTTON):
+                return mTask
+            # 检查定时器(判断超时)
+            # 如果已经在此界面停止了20s以上，刷新Boss列表
+            if mArgs.timer.getPassTime() > 20:
+                Logger.displayLog("操作超时，刷新列表")
+                mArgs.adb.random_click(CheckTemplate.BOSS_LIST_REFRESH_BUTTON.getRect(mArgs.GameServer))
+                # 再次重置定时器
+                mArgs.timer.reset()
                 return mTask
             # 找Boss头像对应的卡片，返回是否找到，卡片是否包含"i"图标以及卡片的Rect
             aircv_rect = Checker.getAircvRectWithTemplate(mArgs, mArgs.RoomCreatorData.MinBossTemplate)
@@ -50,6 +61,8 @@ class Creator:
                 else:  # 这张卡片不是一个房间
                     # 点进去，前往下一步骤
                     mArgs.adb.random_click(aircv_rect.rect)
+                    # 重置定时器，为下一个步骤准备计时
+                    mArgs.timer.reset()
                     return Task.GO_CREATOR_CHECK_BOSS_LEVEL
             else:  # 没有找到头像对应的卡片(说明Boss在列表下面，继续向下翻)
                 random_swipe = Random.genInt(550, 1000)
@@ -71,6 +84,10 @@ class Creator:
             # 检测是否已经到了选择Boss难度的界面
             if not Checker.checkImageWithTemplate(mArgs, CheckTemplate.BOSS_INFO_EXCHANGE_BUTTON):
                 return mTask
+            # 检查定时器(判断超时)
+            if mArgs.timer.getPassTime() > 10:
+                Logger.displayLog("操作超时，回到主城")
+                return Task.GO_BACK_TO_HOME_FORCE
             # 获取目标Boss的ID
             creator_boss_id = mArgs.cfgMan \
                 .checkoutSection(ConfigSections.SECTION_CUSTOM.get()) \
