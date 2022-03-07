@@ -12,10 +12,22 @@ class Room:
     def track(mArgs: Args, task: Task):
         # 乘客模式 进房
         if task == Task.GO_ROOM_AS_GUEST:
+            # 进房后还在Boss列表界面
+            if Checker.checkImageWithTemplate(mArgs, CheckTemplate.BOSS_LIST_REFRESH_BUTTON):
+                return Task.GO_FOLLOW_CHECK_BOSS_LIST
             if Checker.checkImageWithTemplate(mArgs, CheckTemplate.COMMON_CARD_INFO_ICON):
                 return Task.GO_ROOM_PREPARE_AS_GUEST
         # 房主模式 进房
         if task == Task.GO_ROOM_AS_OWNER:
+            # 进房后还在Boss列表界面
+            if Checker.checkImageWithTemplate(mArgs, CheckTemplate.BOSS_LIST_REFRESH_BUTTON):
+                return Task.GO_CREATOR_CHECK_BOSS_LIST
+            # 进房后还在Boss难度选择界面
+            if Checker.checkImageWithTemplate(mArgs, CheckTemplate.BOSS_INFO_EXCHANGE_BUTTON):
+                return Task.GO_CREATOR_CHECK_BOSS_LEVEL
+            # 进房后还在建房界面
+            if Checker.checkImageWithTemplate(mArgs, CheckTemplate.COMMON_MULTI_PLAY_BUTTON):
+                return Task.GO_CREATOR_CREATE_ROOM
             if Checker.checkImageWithTemplate(mArgs, CheckTemplate.COMMON_CARD_INFO_ICON):
                 if Checker.checkImageWithTemplate(mArgs, CheckTemplate.RECRUITMENT_BUTTON):
                     mArgs.adb.random_click(CheckTemplate.RECRUITMENT_BUTTON.getRect(mArgs.GameServer))
