@@ -1,6 +1,7 @@
 import hashlib
 import os
 import random
+import re
 import time
 from urllib import request
 
@@ -13,6 +14,7 @@ from cnocr import CnOcr
 from lib.base import Rect, Point
 from lib.config import ConfigManager
 from lib.constants import ConfigSections, ConfigOptions, ConfigValues
+from lib.logger import Logger
 from lib.resource import Resource
 from lib.timer import Timer
 
@@ -70,6 +72,35 @@ class Random:
                      random.uniform(rect.left_top.y, rect.right_bottom.y))
 
 
+class connection:
+    @staticmethod
+    def get_bluestacks5_hyperv(serial):
+        from winreg import ConnectRegistry, OpenKey, QueryInfoKey, EnumValue, CloseKey, HKEY_LOCAL_MACHINE
+
+        if serial == "bluestacks5-hyperv":
+            parameter_name = "bst.instance.Nougat64.status.adb_port"
+        else:
+            parameter_name = f"bst.instance.Nougat64_{serial[19:]}.status.adb_port"
+
+        reg_root = ConnectRegistry(None, HKEY_LOCAL_MACHINE)
+        sub_dir = f"SOFTWARE\\BlueStacks_nxt"
+        bs_keys = OpenKey(reg_root, sub_dir)
+        bs_keys_count = QueryInfoKey(bs_keys)[1]
+        for i in range(bs_keys_count):
+            key_name, key_value, key_type = EnumValue(bs_keys, i)
+            if key_name == "UserDefinedDir":
+                with open(f"{key_value}\\bluestacks.conf", 'r', encoding='utf-8') as f:
+                    content = f.read()
+                    port = re.findall(rf'{parameter_name}="(.*?)"\n', content, re.S)
+                    if len(port) > 0:
+                        serial = f"127.0.0.1:{port[0]}"
+                break
+
+        CloseKey(bs_keys)
+        CloseKey(reg_root)
+        return serial
+
+
 class AdbTools:
     device = None
     height = None
@@ -77,7 +108,10 @@ class AdbTools:
     zoom = None
 
     def __init__(self, address: str):
+        if address.__contains__('bluestacks'):
+            address = connection.get_bluestacks5_hyperv(address)
         if address.__contains__(':'):
+            Logger.displayLog("ADB Address: " + address)
             msg = adb.connect(address, timeout=3.0)
             if msg.__contains__("connected"):
                 self.device = adb.device(serial=address)
