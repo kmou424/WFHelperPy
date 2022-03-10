@@ -13,6 +13,7 @@ class Follow:
         if mTask == Task.NO_TASK:
             # 检查主城界面领主战按钮
             if not Checker.checkImageWithTemplate(mArgs, CheckTemplate.HOME_BOSS_LIST_BUTTON):
+                Logger.displayLog("不在主城，请求返回首页")
                 return Task.GO_BACK_TO_HOME_FORCE
             else:
                 mArgs.adb.random_click(CheckTemplate.HOME_BOSS_LIST_BUTTON.getRect(mArgs.GameServer))

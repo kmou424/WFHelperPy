@@ -238,7 +238,7 @@ class CheckTemplate:
     HOME_BOSS_LIST_BUTTON = Template(
         'Home_boss_list_button',
         {
-            'cn': Rect(Point(536, 1072), Point(720, 1155)),
+            'cn': Rect(Point(529, 1072), Point(720, 1155)),
             'tw': Rect(Point(536, 1072), Point(630, 1155))
         }
     )
