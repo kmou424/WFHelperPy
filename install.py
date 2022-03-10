@@ -39,6 +39,11 @@ def createToolsVenv():
     os.system('python -m venv tools')
 
 
+def upgradePip():
+    Logger.displayLog("更新pip")
+    os.system('{pip_path} install --upgrade pip'.format(pip_path=VENV_PIP_PATH.replace('/', PATH_DELIMITER)))
+
+
 def installRequirements():
     Logger.displayLog("检查并安装依赖")
     os.system('{pip_path} install wheel'.format(pip_path=VENV_PIP_PATH.replace('/', PATH_DELIMITER)))
@@ -93,4 +98,5 @@ if Path(VENV_PATH).exists():
 else:
     Logger.displayLog("虚拟环境不存在")
     createToolsVenv()
+upgradePip()
 installRequirements()
