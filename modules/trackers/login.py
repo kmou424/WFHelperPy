@@ -25,7 +25,10 @@ class Login:
             # 无脑点击来跳过签到/公告/活动提示等
             # 检测到底栏时停止并返回主城
             if Checker.hasBottomBar(mArgs.Screenshot):
-                return Task.GO_BACK_TO_HOME
+                if Checker.checkImageWithTemplate(mArgs, CheckTemplate.HOME_BOSS_LIST_BUTTON):
+                    return Task.GO_BACK_TO_HOME
+                else:
+                    return Task.GO_BACK_TO_HOME_FORCE
             else:
                 mArgs.adb.random_click(CheckRect.DIALOG_ANNOUNCEMENT_CLOSE_BUTTON_RECT)
         # 继续上次任务: 前往检测当前界面是否在战斗中
