@@ -72,6 +72,9 @@ class Fight:
         if task == Task.GO_FIGHT_END_FAST_JUMP:
             # 完全退出上一战状态后
             if not Checker.hasBottomBar(mArgs.Screenshot):
+                # 自身战败后但队友打过了
+                if Checker.checkImageWithTemplate(mArgs, CheckTemplate.RESULT_BOTTOM_CONTINUE_BUTTON):
+                    return Task.GO_FIGHT_RESULT
                 return task
             # 判断是否在开房界面
             if Checker.checkImageWithTemplate(mArgs, CheckTemplate.COMMON_MULTI_PLAY_BUTTON):
