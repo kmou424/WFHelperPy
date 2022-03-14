@@ -7,6 +7,7 @@ from cnocr import CnOcr
 from lib.config import ConfigManager
 from lib.constants import CheckColor, CheckPoint, CheckTemplate, \
     ConfigOptions, ConfigSections, ResultCode, Task, StatusCode, CheckRect, ConfigValues
+from lib.logger import Logger
 from lib.resource import Resource
 from lib.timer import Timer
 from lib.utils import AdbTools, Args, GuestData, RoomCreatorData
@@ -24,6 +25,7 @@ class TrackerThread(threading.Thread):
         threading.Thread.__init__(self)
         self.mTask = Task.NO_TASK
         self.mStatus = StatusCode.NO_ERROR
+        self.mTimer = Timer()
         cfgMan = ConfigManager(config_file, writable=False)
         mGameServer = cfgMan \
             .selectSection(ConfigSections.SECTION_SETTINGS.get()) \
@@ -31,6 +33,7 @@ class TrackerThread(threading.Thread):
         mOcr = CnOcr(root='prebuilt/cnocr_model')
         self.mArgs = Args(
             isRunning=False,
+            isPaused=True,
             mAdb=adb,
             cfgMan=cfgMan,
             timer=Timer(),
@@ -39,14 +42,15 @@ class TrackerThread(threading.Thread):
             mScreenshot=None,
             mGuestData=GuestData(cfgMan),
             mRoomCreatorData=RoomCreatorData(cfgMan, mGameServer))
-        self.mEscapeDelay = -1
-        self.mStartTime = 0
 
     def run(self):
         threading.Thread.run(self)
         self.mArgs.running = True
+        self.mArgs.paused = False
         self.mStatus = StatusCode.NO_ERROR
         self.mArgs.timer.reset()
+        # 重置主定时器
+        self.mTimer.reset()
         while True:
             # 检查adb
             if not self.mArgs.adb.check():
@@ -55,8 +59,9 @@ class TrackerThread(threading.Thread):
                 self.mTask = Task.NO_TASK
                 self.mStatus = StatusCode.ADB_CONNECT_INTERRUPT
                 break
-            # 判断前台应用
-            if Resource.getGamePackageName(self.mArgs.GameServer) not in self.mArgs.adb.getTopProcess():
+            # 判断前台应用 和 是否暂停
+            if Resource.getGamePackageName(self.mArgs.GameServer) not in self.mArgs.adb.getTopProcess() or \
+                    (self.mArgs.paused and self.mTask == Task.NO_TASK):
                 time.sleep(1)
                 continue
             # 截图
@@ -64,7 +69,7 @@ class TrackerThread(threading.Thread):
             # 若分辨率太大则需要缩放
             if self.mArgs.adb.zoom > 1.0:
                 self.mArgs.Screenshot = cv2.resize(self.mArgs.Screenshot, (720, 1280), interpolation=cv2.INTER_NEAREST)
-            print(self.mTask.name)
+            Logger.displayLog("Task: <{task}>".format(task=self.mTask.name))
             # 意外弹窗检测
             self.__unexpected_dialog()
             # 意外回到登录界面检测
@@ -91,14 +96,8 @@ class TrackerThread(threading.Thread):
                 if self.mArgs.RoomCreatorData.Enabled:
                     self.mTask = Creator.track(self.mArgs, self.mTask)
             self.mTask = Room.track(self.mArgs, self.mTask)
-            if self.mArgs.RoomCreatorData.Enabled and \
-                    self.mTask == Task.GO_FIGHT_AS_OWNER and \
-                    self.mArgs.RoomCreatorData.GhostMode == ConfigValues.COMMON_ENABLE.get():
-                self.mEscapeDelay = self.mArgs.RoomCreatorData.GhostEscapeTime
-            else:
-                self.mEscapeDelay = -1
             self.mTask = Fight.track(self.mArgs, self.mTask)
-            time.sleep(1)
+            time.sleep(0.8)
         # 意外退出处理
         self.mTask = Task.NO_TASK
 
@@ -125,8 +124,8 @@ class TrackerThread(threading.Thread):
             print("检测到了意外的弹窗，回到首页")
             self.mArgs.adb.random_click(CheckTemplate.DIALOG_SINGLE_OK.getRect(self.mArgs.GameServer))
             # 如果房间被自动解散
-            if Checker.checkImageWithTemplate(self.mArgs, CheckTemplate.DIALOG_ROOM_DISBAND):
-                self.mTask = Task.GO_BACK_TO_HOME_FORCE
+            if Checker.checkImageWithTemplate(self.mArgs, CheckTemplate.DIALOG_ROOM_DISBAND_TIMEOUT):
+                self.mTask = Task.GO_BACK_TO_HOME
                 return
             if self.mTask.code < Task.GO_LOGIN.code:
                 self.mTask = Task.GO_BACK_TO_HOME
@@ -137,23 +136,12 @@ class TrackerThread(threading.Thread):
             self.mTask = Task.GO_LOGIN
 
     def __back_to_home(self):
-        isActive = Checker.checkBottomBar(self.mArgs.Screenshot,
-                                          CheckColor.BOTTOM_BAR_ACTIVE_COLOR,
-                                          CheckPoint.BOTTOM_BAR_HOME_POINT)
-        isInactive = Checker.checkBottomBar(self.mArgs.Screenshot,
-                                            CheckColor.BOTTOM_BAR_INACTIVE_COLOR,
-                                            CheckPoint.BOTTOM_BAR_HOME_POINT)
+        isActive = Checker.checkImageWithTemplate(self.mArgs, CheckTemplate.HOME_BOSS_LIST_BUTTON)
 
         if self.mTask == Task.GO_BACK_TO_HOME:
-            if not isActive and isInactive:
-                self.mArgs.adb.random_click(CheckRect.BOTTOM_BAR_HOME_RECT)
-                self.mTask = Task.NO_TASK
-        if self.mTask == Task.GO_BACK_TO_HOME_FORCE:
-            if not Checker.checkImageWithTemplate(self.mArgs, CheckTemplate.HOME_BOSS_LIST_BUTTON):
-                if isActive or isInactive:
+            if Checker.hasBottomBar(self.mArgs.Screenshot):
+                if not isActive:
                     self.mArgs.adb.random_click(CheckRect.BOTTOM_BAR_HOME_RECT)
-                    self.mTask = Task.NO_TASK
-            else:
                 self.mTask = Task.NO_TASK
 
 

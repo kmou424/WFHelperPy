@@ -233,11 +233,12 @@ class RoomCreatorData:
 
 
 class Args:
-    def __init__(self, isRunning: bool,
+    def __init__(self, isRunning: bool, isPaused: bool,
                  mAdb: AdbTools, cfgMan: ConfigManager, timer: Timer, mOcr: CnOcr,
                  mGameServer: str, mScreenshot: cv2.cv2,
                  mGuestData: GuestData, mRoomCreatorData: RoomCreatorData):
         self.running = isRunning
+        self.paused = isPaused
         self.adb = mAdb
         self.cfgMan = cfgMan
         self.timer = timer

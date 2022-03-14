@@ -15,7 +15,7 @@ class Creator:
             # 检查主城界面领主战按钮
             if not Checker.checkImageWithTemplate(mArgs, CheckTemplate.HOME_BOSS_LIST_BUTTON):
                 Logger.displayLog("不在主城，请求返回首页")
-                return Task.GO_BACK_TO_HOME_FORCE
+                return Task.GO_BACK_TO_HOME
             else:
                 mArgs.adb.random_click(CheckTemplate.HOME_BOSS_LIST_BUTTON.getRect(mArgs.GameServer))
                 # 等待过渡动画
@@ -88,7 +88,7 @@ class Creator:
             # 检查定时器(判断超时)
             if mArgs.timer.getPassTime() > 10:
                 Logger.displayLog("操作超时，回到主城")
-                return Task.GO_BACK_TO_HOME_FORCE
+                return Task.GO_BACK_TO_HOME
             # 获取目标Boss的ID
             creator_boss_id = mArgs.cfgMan \
                 .checkoutSection(ConfigSections.SECTION_CUSTOM.get()) \

@@ -28,7 +28,7 @@ class Login:
                 if Checker.checkImageWithTemplate(mArgs, CheckTemplate.HOME_BOSS_LIST_BUTTON):
                     return Task.GO_BACK_TO_HOME
                 else:
-                    return Task.GO_BACK_TO_HOME_FORCE
+                    return Task.GO_BACK_TO_HOME
             else:
                 mArgs.adb.random_click(CheckRect.DIALOG_ANNOUNCEMENT_CLOSE_BUTTON_RECT)
         # 继续上次任务: 前往检测当前界面是否在战斗中

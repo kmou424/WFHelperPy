@@ -89,5 +89,5 @@ class Fight:
                         mArgs.running:
                     return Task.GO_FOLLOW_CHECK_BOSS_LIST
             # 如果都不是，直接回主城
-            return Task.GO_BACK_TO_HOME_FORCE
+            return Task.GO_BACK_TO_HOME
         return task

@@ -184,6 +184,13 @@ class CheckTemplate:
     DIALOG_ROOM_DISBAND = Template(
         'Dialog_room_disband',
         {
+            'cn': Rect(Point(288, 560), Point(433, 590))
+        }
+    )
+    # 超时房间解散弹窗
+    DIALOG_ROOM_DISBAND_TIMEOUT = Template(
+        'Dialog_room_disband_timeout',
+        {
             'cn': Rect(Point(168, 550), Point(550, 600)),
             'tw': Rect(Point(168, 550), Point(550, 600))
         }
@@ -469,7 +476,6 @@ class Status:
 class Task:
     NO_TASK = Status(0, "无任务")
     GO_BACK_TO_HOME = Status(1, "返回首页")
-    GO_BACK_TO_HOME_FORCE = Status(2, "返回首页(强制)")
     GO_ROOM_AS_GUEST = Status(101, "进入房间-乘客")
     GO_ROOM_AS_OWNER = Status(102, "进入房间-房主")
     GO_ROOM_PREPARE_AS_GUEST = Status(103, "准备战斗-乘客")

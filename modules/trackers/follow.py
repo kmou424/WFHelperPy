@@ -14,7 +14,7 @@ class Follow:
             # 检查主城界面领主战按钮
             if not Checker.checkImageWithTemplate(mArgs, CheckTemplate.HOME_BOSS_LIST_BUTTON):
                 Logger.displayLog("不在主城，请求返回首页")
-                return Task.GO_BACK_TO_HOME_FORCE
+                return Task.GO_BACK_TO_HOME
             else:
                 mArgs.adb.random_click(CheckTemplate.HOME_BOSS_LIST_BUTTON.getRect(mArgs.GameServer))
                 # 等待过渡动画
