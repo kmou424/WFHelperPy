@@ -58,13 +58,13 @@ class Checker:
             img_info = Checker.checkImage(
                 mArgs.Screenshot,
                 template,
-                accuracy=0.87
+                accuracy=0.86
             )
         else:
             img_info = Checker.checkImage(
                 mArgs.Screenshot,
                 Resource.getTemplate(mArgs.GameServer, 'Common_card_info_icon'),
-                accuracy=0.87
+                accuracy=0.86
             )
         # 初始化 返回值 AircvRect 类
         ret = AircvRect(False, False, False)
