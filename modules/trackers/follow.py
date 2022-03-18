@@ -21,6 +21,9 @@ class Follow:
                 time.sleep(0.8)
                 return Task.GO_FOLLOW_CHECK_BOSS_LIST
         if mTask == Task.GO_FOLLOW_CHECK_BOSS_LIST:
+            # 从准备界面退回时，若出现误判，跳转回去
+            if Checker.checkImageWithTemplate(mArgs, CheckTemplate.COMMON_CARD_INFO_ICON):
+                return Task.GO_ROOM_PREPARE_AS_GUEST
             # 检查检索中对话框 (应对较慢网络)
             if Checker.checkImageWithTemplate(mArgs, CheckTemplate.BOSS_LIST_LOADING_TEXT):
                 # 为避免过于频繁刷新，最好是边休眠边检测

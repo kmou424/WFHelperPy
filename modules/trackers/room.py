@@ -12,6 +12,9 @@ class Room:
     def track(mArgs: Args, task: Task):
         # 乘客模式 进房
         if task == Task.GO_ROOM_AS_GUEST:
+            if Checker.checkImageWithTemplate(mArgs, CheckTemplate.BOSS_LIST_REFRESH_BUTTON) or \
+                    Checker.checkImageWithTemplate(mArgs, CheckTemplate.BOSS_LIST_REFRESH_UNAVAILABLE_BUTTON):
+                return Task.GO_FOLLOW_CHECK_BOSS_LIST
             if Checker.checkImageWithTemplate(mArgs, CheckTemplate.COMMON_CARD_INFO_ICON):
                 return Task.GO_ROOM_PREPARE_AS_GUEST
         # 房主模式 进房
