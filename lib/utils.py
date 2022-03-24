@@ -166,10 +166,13 @@ class AdbTools:
             if not chunk:
                 break
             screenshot += chunk
-        img = cv2.imdecode(numpy.frombuffer(screenshot, numpy.uint8), cv2.IMREAD_COLOR)
+        buffer = numpy.frombuffer(screenshot, numpy.uint8)
+        if buffer.empty():
+            return None
+        img = cv2.imdecode(buffer, cv2.IMREAD_COLOR)
         if img is None:
             screenshot = screenshot.replace(b'\r\n', b'\n')
-            img = cv2.imdecode(numpy.frombuffer(screenshot, numpy.uint8), cv2.IMREAD_COLOR)
+            img = cv2.imdecode(buffer, cv2.IMREAD_COLOR)
         if isGray:
             img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
         return img

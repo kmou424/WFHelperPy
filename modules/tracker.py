@@ -26,6 +26,7 @@ class TrackerThread(threading.Thread):
         self.mTask = Task.NO_TASK
         self.mStatus = StatusCode.NO_ERROR
         self.mTimer = Timer()
+        self.screenShotErrorTimes = 0
         cfgMan = ConfigManager(config_file, writable=False)
         mGameServer = cfgMan \
             .selectSection(ConfigSections.SECTION_SETTINGS.get()) \
@@ -66,6 +67,15 @@ class TrackerThread(threading.Thread):
                 continue
             # 截图
             self.mArgs.Screenshot = self.mArgs.adb.takeScreenShot(False)
+            if self.mArgs.Screenshot is None:
+                if self.screenShotErrorTimes == 3:
+                    self.mArgs.running = False
+                    break
+                self.screenShotErrorTimes += 1
+                Logger.displayLog("截图失败, 第{times}重试".format(times=self.screenShotErrorTimes))
+                continue
+            else:
+                self.screenShotErrorTimes = 0
             # 若分辨率太大则需要缩放
             if self.mArgs.adb.zoom > 1.0:
                 self.mArgs.Screenshot = cv2.resize(self.mArgs.Screenshot, (720, 1280), interpolation=cv2.INTER_NEAREST)
