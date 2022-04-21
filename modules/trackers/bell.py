@@ -25,8 +25,8 @@ class Bell:
                     if Checker.checkImage(
                             bell_dialog_boss_info_img,
                             Resource.getBossTemplate(mArgs.GameServer, boss_id),
-                            accuracy=0.95
-                    ):
+                            accuracy=0.90
+                    ) is not None:
                         mArgs.adb.random_click(CheckTemplate.BELL_DIALOG_JOIN_RECT.getRect(mArgs.GameServer))
                         # TODO: 日志打印Boss名字，单独在一个线程执行，以免占用过多资源
                         print('Boss ID: ' + boss_id)

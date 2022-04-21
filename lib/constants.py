@@ -288,7 +288,7 @@ class CheckTemplate:
     BELL_DIALOG_BOSS_INFO_IMG = Template(
         'Bell_dialog_boss_info_img',
         {
-            'cn': Rect(Point(48, 312), Point(208, 399)),
+            'cn': Rect(Point(48, 311), Point(208, 398)),
             'tw': Rect(Point(48, 332), Point(208, 419))
         }
     )
@@ -353,7 +353,7 @@ class CheckTemplate:
     FIGHT_PAUSE_UI_ESCAPE_BUTTON = Template(
         'Fight_pause_ui_escape_button',
         {
-            'cn': Rect(Point(0, 1196), Point(155, 1264)),
+            'cn': Rect(Point(6, 1190), Point(161, 1258)),
             'tw': Rect(Point(0, 1196), Point(155, 1264))
         }
     )

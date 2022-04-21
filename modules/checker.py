@@ -3,6 +3,7 @@ import cv2
 
 from lib.base import Color, Rgb, Point, Rect
 from lib.constants import Template, CheckTemplate, Const, CheckColor, CheckPoint
+from lib.logger import Logger
 from lib.resource import Resource
 from lib.utils import AircvRect, Args
 
@@ -26,11 +27,15 @@ class Checker:
 
     @staticmethod
     def checkImageWithTemplate(mArg: Args, mTemplate: Template, accuracy=0.85):
-        return str(Checker.checkImage(
+        if str(Checker.checkImage(
             Resource.cropImg(mArg.Screenshot, mTemplate.getRect(mArg.GameServer)),
             Resource.getTemplate(mArg.GameServer, mTemplate.getName()),
             accuracy
-        )) != 'None'
+        )) != 'None':
+            Logger.displayLog('Checker: ' + mTemplate.getName(), log_lvl=Logger.LOG_LEVEL_DEBUG)
+            return True
+        else:
+            return False
 
     @staticmethod
     def checkImage(img1: cv2.cv2, img2: cv2.cv2, accuracy=0.85) -> dict:
