@@ -410,8 +410,8 @@ class CheckTemplate:
     RESULT_OFFLINE_EXIT_ROOM_BUTTON = Template(
         'Result_bottom_offline_exit_room_button',
         {
-            'cn': None,
-            'tw': Rect(Point(248, 1174), Point(471, 1232))
+            'cn': Rect(Point(249, 1175), Point(471, 1233)),
+            'tw': Rect(Point(249, 1175), Point(471, 1233))
         }
     )
 

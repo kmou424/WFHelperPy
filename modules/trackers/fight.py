@@ -35,10 +35,9 @@ class Fight:
         # 结算
         if task == Task.GO_FIGHT_RESULT:
             # 台服设定，掉线后结算时的两个按钮会变成一个按钮，所以特判一下
-            if mArgs.GameServer == 'tw':
-                if Checker.checkImageWithTemplate(mArgs, CheckTemplate.RESULT_OFFLINE_EXIT_ROOM_BUTTON):
-                    mArgs.adb.random_click(CheckTemplate.RESULT_OFFLINE_EXIT_ROOM_BUTTON.getRect(mArgs.GameServer))
-                    return Task.GO_FIGHT_END_FAST_JUMP
+            if Checker.checkImageWithTemplate(mArgs, CheckTemplate.RESULT_OFFLINE_EXIT_ROOM_BUTTON):
+                mArgs.adb.random_click(CheckTemplate.RESULT_OFFLINE_EXIT_ROOM_BUTTON.getRect(mArgs.GameServer))
+                return Task.GO_FIGHT_END_FAST_JUMP
             # TODO: 提供离开房间和返回房间两种不同的选项
             if Checker.checkImageWithTemplate(mArgs, CheckTemplate.RESULT_BOTTOM_EXIT_ROOM_BUTTON) or \
                     Checker.checkImageWithTemplate(mArgs, CheckTemplate.RESULT_BOTTOM_DISBAND_ROOM_BUTTON):
