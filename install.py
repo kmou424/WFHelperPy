@@ -41,7 +41,7 @@ def createToolsVenv():
 
 def upgradePip():
     Logger.displayLog("更新pip")
-    os.system('{pip_path} install --upgrade pip'.format(pip_path=VENV_PIP_PATH.replace('/', PATH_DELIMITER)))
+    os.system('{python_path} -m ensurepip --upgrade'.format(python_path=VENV_PYTHON_PATH.replace('/', PATH_DELIMITER)))
 
 
 def installRequirements():
