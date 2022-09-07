@@ -4,6 +4,9 @@
 #
 #    pip-compile --annotation-style=line --output-file=requirements.txt requirements-in.txt
 #
+--index-url https://mirrors.bfsu.edu.cn/pypi/web/simple/
+--trusted-host mirrors.bfsu.edu.cn
+
 absl-py==1.0.0            # via tensorboard
 adbutils==0.13.1          # via -r requirements-in.txt
 aiohttp==3.8.1            # via fsspec
